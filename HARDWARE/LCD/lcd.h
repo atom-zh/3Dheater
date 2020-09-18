@@ -66,7 +66,7 @@ void LCD_ShowNum(unsigned char  x,unsigned char  y,unsigned int num,unsigned cha
 void LCD_ShowString(unsigned char  x,unsigned char  y,const unsigned char  *p);	 
 void LCD_Set_Pos(unsigned char  x, unsigned char  y);
 
-void clear_screen();
+void clear_screen(void);
 void test_display(unsigned char data1,unsigned char data2);
 #endif  
 	 

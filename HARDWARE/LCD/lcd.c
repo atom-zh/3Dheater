@@ -128,7 +128,7 @@ void LCD_DrawPoint(unsigned char  x,unsigned char  y,unsigned char  t)
 
 void LCD_DrawLine(unsigned char  x,unsigned char  y,unsigned char  dir,unsigned char  len)
 {
-	unsigned char  pos,bx,temp=0;
+	unsigned char  pos;
 
 	if(dir)
 	{
@@ -330,7 +330,7 @@ void LCD_Init()
 
 
 /*È«ÆÁÇåÆÁ*/
-void clear_screen()
+void clear_screen(void)
 {
 	unsigned char i,j;
  	for(i=0;i<9;i++)
