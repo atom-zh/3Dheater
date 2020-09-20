@@ -10,6 +10,7 @@
 #include "temp.h"
 #include "bmp.h"
 #include "weight.h"
+#include "humidity.h"
 
 void display_init(void)
 {
@@ -40,7 +41,9 @@ void update_temp(void)
 
 void update_hum(void)
 {
-    LCD_ShowNum(33,1,80,4,12);//显示ASCII数字 shidu
+    unsigned int hum = 60;
+    hum = ReadShtc3();
+    LCD_ShowNum(33,1,hum,3,12);//显示ASCII数字 shidu
 }
 
 void update_weight1(void)
@@ -78,6 +81,7 @@ int main(void)
 	EXTIX_Init();
  	LED_Init();
 	Temp_Init();
+    humidity_init();
     Init_Hx711();
 
     LCD_Init();			 //初始化LCD
