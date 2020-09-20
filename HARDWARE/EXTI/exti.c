@@ -11,12 +11,12 @@ void EXTIX_Init(void)
 	NVIC_InitTypeDef NVIC_InitStructure;
 
 	KEY_Init();	 //	按键端口初始化
+    
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);	//使能复用功能时钟
 
 #if 0
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);	//使能复用功能时钟
-
-   //GPIOB.3	  中断线以及中断初始化配置  上升沿触发	//EC_A
-  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource13);
+    //GPIOB.3	  中断线以及中断初始化配置  上升沿触发	//EC_A
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource13);
 	EXTI_InitStructure.EXTI_Line=EXTI_Line3;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;	
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
@@ -30,8 +30,8 @@ void EXTIX_Init(void)
 	NVIC_Init(&NVIC_InitStructure);
 #endif
 
-   //GPIOB.4	  中断线以及中断初始化配置  上升沿触发	//EC_B
-  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource4);
+    //GPIOB.4	  中断线以及中断初始化配置  上升沿触发	//EC_B
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource4);
 	EXTI_InitStructure.EXTI_Line=EXTI_Line4;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;	
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
@@ -60,17 +60,19 @@ void EXTIX_Init(void)
 
 void EXTI4_IRQHandler(void)
 {
+    DEBUG("knob: trigger \r\n");
 	delay_ms(1);
-	printf("knob: trigger \r\n");
 	if(EC_B==1)	
 	{
-		 if(EC_A == 1)
-		 {
-			 printf("knob: +1 \r\n");
-			 delay_ms(10);
-		 }else{
-			 printf("knob: -1 \r\n");
-		 }
+        if(EC_A == 1)
+        {
+            DEBUG("knob: +1 \r\n");
+            KEY_update(key_left);
+            delay_ms(10);
+        }else{
+            DEBUG("knob: -1 \r\n");
+            KEY_update(key_right);
+        }
 	 }
  	 EXTI_ClearITPendingBit(EXTI_Line4);
 }
@@ -78,13 +80,16 @@ void EXTI4_IRQHandler(void)
 //外部中断9_5服务程序 
 void EXTI9_5_IRQHandler(void)
 {
+	DEBUG("knob: trigger \r\n");
 	delay_ms(10);
 	if(EC_K==1)	
 	{
-			printf("key: press \r\n");
-			delay_ms(10);
+        DEBUG("key: press \r\n");
+        KEY_update(key_enter);
+        delay_ms(10);
 	}else{
-			printf("key: release \r\n");
+        KEY_update(key_release);
+        DEBUG("key: release \r\n");
 	}	
- 	 EXTI_ClearITPendingBit(EXTI_Line5);
+    EXTI_ClearITPendingBit(EXTI_Line5);
 }

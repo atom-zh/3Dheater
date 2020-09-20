@@ -110,7 +110,7 @@ void GameOver(void)
 
 
 //主函数 
-int main1(int argc, char *argv[]) 
+int aaaaa(void) 
 { 
 	char charin; //输入的字符 
 	char menuid[3]={0,0,0}; //某一级的菜单的偏移量的记录数组 
