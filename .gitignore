@@ -1,3 +1,24 @@
+# keil files
+*.bak
+*.ddk
+*.edk
+*.lst
+*.lnp
+*.mpf
+*.mpj
+*.omf
+*.plg
+*.rpt
+*.__i
+*.crf
+*.axf
+*.tra
+*.dep
+*.JLinkLog.txt
+*.iex
+*.htm
+*.sct
+
 # Prerequisites
 *.d
 

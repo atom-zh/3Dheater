@@ -32,7 +32,7 @@ static void I2C_GPIO_Config(void)
   * @param  нч
   * @retval нч
   */
-static void I2C_Mode_Configu(void)
+static void I2C_Mode_Config(void)
 {
   I2C_InitTypeDef  I2C_InitStructure; 
 

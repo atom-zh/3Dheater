@@ -11,7 +11,7 @@
 #include "bmp.h"
 #include "weight.h"
 
-void display_info(void)
+void display_init(void)
 {
 	LCD_ShowString(1,1, "hum:   %|tmp:  C");
 	LCD_DrawLine(0,0,1,128);
@@ -32,23 +32,15 @@ void display_info(void)
 
 void update_temp(void)
 {
-	  u16 adcx;
-	  float temp = 25, weight = 0;
+	  float temp = 25;
 	
-		adcx=Get_Temp_Average(ADC_Channel_1,10);
-		//LCD_ShowxNum(156,130,adcx,4,16,0);//显示ADC的值
-		temp=(float)adcx*(3.3/4096);
-		//LCD_ShowxNum(156,150,adcx,1,16,0);//显示电压值
-		// printf("The adc raw is %0.2f v\n", temp);
-		temp-=adcx;
-		temp*=1000;
-
-		LCD_ShowNum(100,1,25,3,12);//显示ASCII数字 wendu
+		temp=Get_Temp();
+		LCD_ShowNum(100,1,temp,3,12);//显示ASCII数字 wendu
 }
 
 void update_hum(void)
 {
-  LCD_ShowNum(33,1,80,4,12);//显示ASCII数字 shidu
+    LCD_ShowNum(33,1,80,4,12);//显示ASCII数字 shidu
 }
 
 void update_weight1(void)
@@ -67,11 +59,18 @@ void update_weight2(void)
     LCD_ShowNum(64,26,444,3,12);//显示ASCII数字
 }
 
+void display_info(void)
+{
+		update_temp();
+		update_hum();
+		update_weight1();
+		update_weight2();
+}
 
 int main(void)
 {
 	delay_init();	    	 //延时函数初始化	  
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
 	uart_init(115200);	 	//串口初始化为115200
 	SPI2_Init(); 			     //SPI 初始化 	
 
@@ -84,16 +83,14 @@ int main(void)
 
 	delay_ms(500);
 	LCD_Clear();
-	display_info();
+	display_init();
 
   printf("Hello World!\r\n");
 	while(1)
 	{	
-		delay_ms(500);
-		update_temp();
-		update_hum();
-		update_weight1();
-		update_weight2();
+		delay_ms(1000);
+    display_info();
+		delay_ms(1000);
 	}
 }
 
