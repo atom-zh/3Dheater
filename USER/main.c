@@ -48,18 +48,24 @@ void update_hum(void)
 
 void update_weight1(void)
 {
-    long count = 0;
-    float weight = 0;
+    long count1 = 0;
+    float weight1 = 0;
 	
-    count=HX711_Read()-120876; //加零点漂移
-    weight=(float)count/700; 
-    printf("Weight is raw: count=%ld, weight=%0.3f  g\n", count, weight);
-    LCD_ShowNum(64,14,weight,3,12);//显示ASCII数字
+    count1=HX711_W1Read()-150000; //加零点漂移
+    weight1=(float)count1/700; 
+    printf("Weight1 is raw: count=%ld, weight=%0.3f  g\n", count1, weight1);
+    LCD_ShowNum(64,14,weight1,3,12);//显示ASCII数字
 }
 
 void update_weight2(void)
 {
-    LCD_ShowNum(64,26,444,3,12);//显示ASCII数字
+    long count2 = 0;
+    float weight2 = 0;
+	
+    count2=HX711_W2Read()-150000; //加零点漂移
+    weight2=(float)count2/700; 
+    printf("Weight2 is raw: count=%ld, weight=%0.3f  g\n", count2, weight2);
+    LCD_ShowNum(64,26,weight2,3,12);//显示ASCII数字
 }
 
 void display_info(void)

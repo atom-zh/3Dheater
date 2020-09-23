@@ -8,5 +8,6 @@
 #include "stm32f10x.h"
 
 void Init_Hx711(void);
-unsigned long HX711_Read(void);
+unsigned long HX711_W1Read(void);
+unsigned long HX711_W2Read(void);
 #endif
