@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LED;..\HARDWARE\TEMP;..\HARDWARE\RTC;..\HARDWARE\OLED;..\HARDWARE\WEIGHT;..\HARDWARE\BSP;..\HARDWARE\HUMIDITY;..\HARDWARE\EXTI;..\STM32F10x_FWLib\inc;..\HARDWARE\APP</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LED;..\HARDWARE\TEMP;..\HARDWARE\RTC;..\HARDWARE\OLED;..\HARDWARE\WEIGHT;..\HARDWARE\BSP;..\HARDWARE\HUMIDITY;..\HARDWARE\EXTI;..\STM32F10x_FWLib\inc;..\HARDWARE\APP;..\HARDWARE\FAN;..\HARDWARE\HEATING</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -477,6 +477,16 @@
               <FileName>menu.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\APP\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>fan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\FAN\fan.c</FilePath>
+            </File>
+            <File>
+              <FileName>heating.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\HEATING\heating.c</FilePath>
             </File>
           </Files>
         </Group>

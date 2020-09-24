@@ -2,6 +2,12 @@
 #define __BSP_CFG_H	 
 #include "sys.h"
 
+typedef enum
+{
+    open,
+    close
+}Option;
+
 //IO·½ÏòÉèÖÃ
 #define SDA_IN()  {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=(u32)8<<28;}
 #define SDA_OUT() {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=(u32)3<<28;}

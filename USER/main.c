@@ -11,6 +11,17 @@
 #include "bmp.h"
 #include "weight.h"
 #include "humidity.h"
+#include "fan.h"
+#include "heating.h"
+
+struct _Dev_Info
+{
+    float temp;
+    unsigned int hum;
+    float weight1;
+    float weight2;
+}Dev_Info;
+
 
 void display_init(void)
 {
@@ -37,6 +48,7 @@ void update_temp(void)
 	
     temp=Get_Temp();
     LCD_ShowNum(100,1,temp,3,12);//显示ASCII数字 wendu
+    Dev_Info.temp = temp;
 }
 
 void update_hum(void)
@@ -44,6 +56,7 @@ void update_hum(void)
     unsigned int hum = 60;
     hum = ReadShtc3();
     LCD_ShowNum(33,1,hum,3,12);//显示ASCII数字 shidu
+    Dev_Info.hum = hum;
 }
 
 void update_weight1(void)
@@ -68,7 +81,7 @@ void update_weight2(void)
     LCD_ShowNum(64,26,weight2,3,12);//显示ASCII数字
 }
 
-void display_info(void)
+void update_info(void)
 {
     update_temp();
     update_hum();
@@ -95,15 +108,28 @@ int main(void)
 	delay_ms(500);
 	LCD_Clear();
 	display_init();
-
+    
+    Fan_Init();
+    Heating_Init();
+    
     printf("Hello World!\r\n");
 	while(1)
 	{	
         delay_ms(1000);
-        display_info();
+        update_info();
         key_val=KEY_Scan();
         printf("KEY SCAN: val %d\r\n", key_val);
         KEY_update(0);
+        
+        if(Dev_Info.temp > 33)
+            Fan_Ctrl(open);
+        else
+            Fan_Ctrl(close);
+
+        if(Dev_Info.hum > 80)
+            Heating_Ctrl(open);
+        else
+            Heating_Ctrl(close);
 	}
 }
 
