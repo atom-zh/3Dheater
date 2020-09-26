@@ -4,8 +4,8 @@
 
 typedef enum
 {
-    open,
-    close
+    close,
+    open
 }Option;
 
 //IO∑ΩœÚ…Ë÷√

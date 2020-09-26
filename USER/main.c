@@ -94,11 +94,11 @@ int main(void)
     u8 key_val;
 	delay_init();	    	 //延时函数初始化	  
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
-	uart_init(115200);	 	//串口初始化为115200
-	SPI2_Init(); 			     //SPI 初始化 	
+	uart_init(115200);	 	 //串口初始化为115200
+	SPI2_Init(); 			 //SPI 初始化 	
 
 	EXTIX_Init();
- 	LED_Init();
+ 	//LED_Init();
 	Temp_Init();
     humidity_init();
     Init_Hx711();
@@ -121,7 +121,7 @@ int main(void)
         printf("KEY SCAN: val %d\r\n", key_val);
         KEY_update(0);
         
-        if(Dev_Info.temp > 33)
+        if(Dev_Info.temp > 34)
             Fan_Ctrl(open);
         else
             Fan_Ctrl(close);

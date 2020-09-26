@@ -71,10 +71,10 @@ unsigned int ReadShtc3(void)
 
     /*-- calculate relative humidity [%RH] --*/ 
     HumData =(HumData*100.0)/65536;                 //公式: RH%=100 * SRH/2^16                  
-    DEBUG("Hum:%f \r\n", Humidity);
+    DEBUG("Hum:%d \r\n", HumData);
     
     /*-- calculate temperature [°C] --*/
     TempData = (TempData*175.0)/65536-45;      //公式:T= -45 + 175 * ST/2^16       
-    DEBUG("Temp:%f \r\n", Temperature);
+    DEBUG("Temp:%d \r\n", TempData);
     return HumData;
 }

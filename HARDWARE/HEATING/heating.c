@@ -18,8 +18,8 @@ void Heating_Ctrl(Option ctrl)
 {
     if(ctrl)
     {
-        GPIO_ResetBits(GPIOA,GPIO_HEATING);
-    }else{
         GPIO_SetBits(GPIOA,GPIO_HEATING);
+    }else{
+        GPIO_ResetBits(GPIOA,GPIO_HEATING);
     }
 }
