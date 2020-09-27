@@ -10,7 +10,7 @@ enum KEY
 	key_right
 };
 
-#define GPIO_EC_A (GPIO_Pin_14)
+#define GPIO_EC_A (GPIO_Pin_3)
 #define GPIO_EC_B (GPIO_Pin_4)
 #define GPIO_EC_K (GPIO_Pin_5)
 
