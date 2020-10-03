@@ -25,20 +25,20 @@ struct _Dev_Info
 
 void display_init(void)
 {
-	LCD_ShowString(1,1, "hum:   %|tmp:  C");
-	LCD_DrawLine(0,0,1,128);
-	LCD_DrawLine(0,13,1,128);
-	LCD_DrawLine(0,63,1,128);
+    LCD_ShowString(1,1, "hum:   %|tmp:  C");
+    LCD_DrawLine(0,0,1,128);
+    LCD_DrawLine(0,13,1,128);
+    LCD_DrawLine(0,63,1,128);
 	
-	LCD_DrawLine(127,0,0,64);
-	LCD_DrawLine(0,0,0,64);
+    LCD_DrawLine(127,0,0,64);
+    LCD_DrawLine(0,0,0,64);
 #if 1
     LCD_ShowString(1,14,"weight1:      g"); 
-	LCD_ShowString(1,26,"weight2:      g"); 
+    LCD_ShowString(1,26,"weight2:      g"); 
     LCD_ShowChinese(1,47,0);
-	LCD_ShowChinese(19,47,1);
-	LCD_ShowChinese(37,47,2);
-	LCD_ShowChinese(55,47,3);
+    LCD_ShowChinese(19,47,1);
+    LCD_ShowChinese(37,47,2);
+    LCD_ShowChinese(55,47,3);
 #endif
 }
 
@@ -92,35 +92,35 @@ void update_info(void)
 int main(void)
 {
     u8 key_val;
-	delay_init();	    	 //延时函数初始化	  
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
-	uart_init(115200);	 	 //串口初始化为115200
-	SPI2_Init(); 			 //SPI 初始化 	
+    delay_init();	    	 //延时函数初始化	  
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
+    uart_init(115200);	 	 //串口初始化为115200
+    SPI2_Init(); 			 //SPI 初始化 	
 
-	EXTIX_Init();
- 	//LED_Init();
-	Temp_Init();
+    EXTIX_Init();
+    //LED_Init();
+    Temp_Init();
     humidity_init();
     Init_Hx711();
 
     LCD_Init();			 //初始化LCD
 
-	delay_ms(500);
-	LCD_Clear();
-	display_init();
+    delay_ms(500);
+    LCD_Clear();
+    display_init();
     
     Fan_Init();
     Heating_Init();
     
     printf("Hello World!\r\n");
-	while(1)
-	{	
+    while(1)
+    {
         delay_ms(1000);
         update_info();
         key_val=KEY_Scan();
         printf("KEY SCAN: val %d\r\n", key_val);
         KEY_update(0);
-        
+ 
         if(Dev_Info.temp > 34)
             Fan_Ctrl(open);
         else
@@ -130,6 +130,6 @@ int main(void)
             Heating_Ctrl(open);
         else
             Heating_Ctrl(close);
-	}
+    }
 }
 

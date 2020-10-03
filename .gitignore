@@ -63,6 +63,10 @@
 *.idb
 *.pdb
 
+# vim tmp files
+*~
+*.swp
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
