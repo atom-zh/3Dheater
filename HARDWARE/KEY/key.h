@@ -2,13 +2,13 @@
 #define __KEY_H	 
 #include "sys.h"
 
-enum KEY
+typedef enum
 {
-    key_release,
-    key_enter,
-	key_left,
-	key_right
-};
+    KEY_RELEASE,
+    KEY_ENTER,
+    KEY_LEFT,
+    KEY_RIGHT
+}KEY;
 
 #define GPIO_EC_A (GPIO_Pin_3)
 #define GPIO_EC_B (GPIO_Pin_4)
@@ -19,6 +19,6 @@ enum KEY
 #define EC_K  GPIO_ReadInputDataBit(GPIOB,GPIO_EC_K)
 
 void KEY_Init(void);//IO初始化
-void KEY_update(enum KEY Read_Key);
+void KEY_update(KEY Read_Key);
 u8 KEY_Scan(void);  	//按键扫描函数					    
 #endif

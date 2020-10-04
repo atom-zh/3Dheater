@@ -13,6 +13,7 @@
 #include "humidity.h"
 #include "fan.h"
 #include "heating.h"
+#include "menu.h"
 
 struct _Dev_Info
 {
@@ -22,10 +23,11 @@ struct _Dev_Info
     float weight2;
 }Dev_Info;
 
+DisplayStatus status=MENU_INFO;
 
 void display_init(void)
 {
-    LCD_ShowString(1,1, "hum:   %|tmp:  C");
+    LCD_ShowString(1,1, (const unsigned char *)"hum:   %|tmp:  C");
     LCD_DrawLine(0,0,1,128);
     LCD_DrawLine(0,13,1,128);
     LCD_DrawLine(0,63,1,128);
@@ -33,12 +35,14 @@ void display_init(void)
     LCD_DrawLine(127,0,0,64);
     LCD_DrawLine(0,0,0,64);
 #if 1
-    LCD_ShowString(1,14,"weight1:      g"); 
-    LCD_ShowString(1,26,"weight2:      g"); 
+    LCD_ShowString(1,14,(const unsigned char *)"weight1:      g"); 
+    LCD_ShowString(1,26,(const unsigned char *)"weight2:      g"); 
     LCD_ShowChinese(1,47,0);
     LCD_ShowChinese(19,47,1);
     LCD_ShowChinese(37,47,2);
     LCD_ShowChinese(55,47,3);
+    LCD_ShowChinese(73,47,4);
+    LCD_ShowChinese(91,47,5);
 #endif
 }
 
@@ -115,18 +119,56 @@ int main(void)
     printf("Hello World!\r\n");
     while(1)
     {
-        delay_ms(1000);
-        update_info();
+        delay_ms(100);
         key_val=KEY_Scan();
-        printf("KEY SCAN: val %d\r\n", key_val);
+        //printf("KEY SCAN: val %d\r\n", key_val);
         KEY_update(0);
- 
+        
+        if(key_val == KEY_ENTER && status == MENU_INFO)
+        {
+            status = MENU_ENTRY;
+        }
+
+        switch(status)
+        {
+            case MENU_INFO:
+            {
+                update_info();
+                delay_ms(1000);
+                break;
+            }
+            case MENU_ENTRY:
+            {
+                LCD_Clear();
+                delay_ms(100);
+                menu_update(key_val, status);
+                status = MENU_CTRL;
+                break;
+            }
+            case MENU_CTRL:
+            {
+                if(menu_update(key_val, status))
+                    status = MENU_EXIT;
+                break;
+            }
+            case MENU_EXIT:
+            {
+                LCD_Clear();
+                delay_ms(100);
+                display_init();
+                status = MENU_INFO;
+                break;
+            }
+            
+            default: break;
+        }
+        
         if(Dev_Info.temp > 34)
             Fan_Ctrl(open);
         else
             Fan_Ctrl(close);
 
-        if(Dev_Info.hum > 80)
+        if(Dev_Info.hum > 70)
             Heating_Ctrl(open);
         else
             Heating_Ctrl(close);

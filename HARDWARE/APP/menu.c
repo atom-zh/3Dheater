@@ -2,174 +2,282 @@
 #include "lcd.h"
 #include "menu.h"
 #include "usart.h"
-#include <key.h>
+#include "key.h"
+#include "delay.h"
  
 #define Null 0
-char over=0; //结束标志
  
 //结构体类型定义
 struct MenuItem
 {  
-    char MenuCount; //结构体数组的元素个数
-    char *DisplayString;  //当前LCD显示的信息
-    void (*Subs)();  //执行的函数的指针.
+    char MenuCount;               //结构体数组的元素个数
+    char *DisplayString;          //当前LCD显示的信息
+    void (*Subs)();               //执行的函数的指针.
     struct MenuItem *Childrenms;  //指向子节点的指针
-    struct MenuItem *Parentms;  //指向父节点的指针
+    struct MenuItem *Parentms;    //指向父节点的指针
 };
- 
+
 //函数声明
 void Nop(void);
-void DoSomething(struct MenuItem *manyou);
-void GameOver(void);
-void Locate(struct MenuItem *manyou);
-void Run(struct MenuItem *manyou);
+void DoSomething(void);
+void TurnBack(void);
+void Locate(void);
+void Run(void);
+void Display_title(void);
+void MaxTempSet(void);
 
 //====================================
 //结构体声明
-struct MenuItem m0_main[4];
-struct MenuItem m1_file[5];
-struct MenuItem m1_edit[4];
-struct MenuItem m1_view[2];
-struct MenuItem m2_font[3];
-struct MenuItem m1_help[3];
+struct MenuItem m0_main[5];
+struct MenuItem m1_dis[2];
+struct MenuItem m1_mod[4];
+struct MenuItem m1_sys[4];
+struct MenuItem m1_rev[2];
+struct MenuItem m1_help[2];
+
+struct MenuItem m2_temp[3];
+struct MenuItem m2_hum[3];
+struct MenuItem m2_weight[4];
+
+struct MenuItem m3_temp_mod[3];
+struct MenuItem m3_temp_th[2];
+
+char menuid[5]={0,0,0,0,0}; //某一级的菜单的偏移量的记录数组
+char i=0; //上面数组的下标值
+struct MenuItem *manyou=&m0_main[0]; //漫游,在菜单中漫游
 
 //====================================
 //结构体实现
-struct MenuItem m0_main[4]=
+/*    menu    layout                    
+ *    m0          m1        m2        m3        m4
+ *   main       Mod_Set  Sys_Set             
+ *  Dis_Info    MOD1     Temp                
+ *  Mod_Set     MOD2     Humtity             
+ *  Sys_set     MOD3     Weight              
+ *  Dev_Info    Mod4                         
+ *  Help                                                                    
+ */
+
+struct MenuItem m0_main[5]=
 {
-    {4,"file",Nop,m1_file,Null},
-    {4,"edit",Nop,m1_edit,Null},
-    {4,"view",Nop,m1_view,Null},
-    {4,"help",Nop,m1_help,Null},
+    {5, "Dis Info",  DoSomething,    m1_dis,     Null},
+    {5, "Mod Set",   DoSomething,    m1_mod,     Null},
+    {5, "Sys Set",   DoSomething,    m1_sys,     Null},
+    {5, "Rev Info",  DoSomething,    m1_rev,     Null},
+    {5, "Help",      DoSomething,    m1_help,    Null},
 };
 
-struct MenuItem m1_file[5]=
+struct MenuItem m1_dis[2]=
 {
-    {5,"open",DoSomething,Null,m0_main},
-    {5,"save",DoSomething,Null,m0_main},
-    {5,"save as",DoSomething,Null,m0_main},
-    {5,"print",DoSomething,Null,m0_main},
-    {5,"exit",GameOver,Null,m0_main},
+    {2, "Dis_Info", DoSomething,    Null,    m0_main},
+    {2, "Exit",     TurnBack,       Null,    m0_main},
 };
 
-struct MenuItem m1_edit[4]=
+struct MenuItem m1_sys[4]=
 {
-    {4,"undo",DoSomething,Null,m0_main},
-    {4,"redo",DoSomething,Null,m0_main},
-    {4,"copy",DoSomething,Null,m0_main},
-    {4,"paste",DoSomething,Null,m0_main},
+    {4, "Temp",     DoSomething,    m2_temp,     m0_main},
+    {4, "Humitity", DoSomething,    m2_hum,      m0_main},
+    {4, "Weight",   DoSomething,    m2_weight,   m0_main},
+    {4, "Exit",     TurnBack,       Null,        m0_main},
 };
 
-struct MenuItem m1_view[2]=
+struct MenuItem m1_mod[4]=
 {
-    {2,"font",Nop,m2_font,m0_main},
-    {2,"color",DoSomething,Null,m0_main},
+    {4, "MOD1",     DoSomething,    Null,   m0_main},
+    {4, "MOD2",     DoSomething,    Null,   m0_main},
+    {4, "MOD3",     DoSomething,    Null,   m0_main},
+    {4, "Exit",     TurnBack,       Null,   m0_main},
 };
 
-struct MenuItem m2_font[3]=
+struct MenuItem m1_help[2]=
 {
-    {3,"songti",DoSomething,Null,m1_view},
-    {3,"heiti",DoSomething,Null,m1_view},
-    {3,"youyuan",DoSomething,Null,m1_view},
+    {2, "Help Info",    DoSomething,    Null,   m0_main},
+    {2, "Exit",         TurnBack,       Null,   m0_main},
 };
 
-struct MenuItem m1_help[3]=
+struct MenuItem m2_temp[3]=
 {
-    {3,"index",DoSomething,Null,m0_main},
-    {3,"online",DoSomething,Null,m0_main},
-    {3,"about",DoSomething,Null,m0_main},
+    {3, "Temp Mod",   DoSomething,    Null,         m1_sys},
+    {3, "Top Set",    DoSomething,    m3_temp_th,   m1_sys},
+    {3, "Exit",       TurnBack,       Null,         m1_sys},
 };
+
+struct MenuItem m2_hum[3]=
+{
+    {3, "Hum Mod",   DoSomething,    Null,   m1_sys},
+    {3, "Top Set",   DoSomething,    Null,   m1_sys},
+    {3, "Exit",      TurnBack,       Null,   m1_sys},
+};
+
+struct MenuItem m2_weight[4]=
+{
+    {4,"Weight Mod",    DoSomething,    Null,   m1_sys},
+    {4,"W1 Set",        DoSomething,    Null,   m1_sys},
+    {4,"W2 Set",        DoSomething,    Null,   m1_sys},
+    {4,"Exit",          TurnBack,       Null,   m1_sys},
+};
+
+struct MenuItem m3_temp_mod[3]=
+{
+    {3, "Celsius",      DoSomething,    Null,   m2_temp},
+    {3, "Fahrenheit",   DoSomething,    Null,   m2_temp},
+    {3, "Exit",         TurnBack,       Null,   m2_temp},
+};
+
+struct MenuItem m3_temp_th[2]=
+{
+    {2, "Max Temp:    C",    MaxTempSet,     Null,   m2_temp},
+    {2, "Exit",              TurnBack,       Null,   m2_temp},
+};
+
+void MaxTempSet(void)
+{
+    char temp_th=25;
+    KEY key_val;
+    delay_ms(100);
+    key_val = KEY_Scan();
+    KEY_update(0);
+    while(key_val != KEY_ENTER)
+    {
+        key_val = KEY_Scan();
+        KEY_update(0);
+        delay_ms(100);
+        if(temp_th > 99)
+            temp_th = 100;
+        else if(temp_th < 1)
+            temp_th = 0;
+
+        if(key_val == KEY_RIGHT)
+            temp_th++;
+        else if(key_val == KEY_LEFT)
+            temp_th--;
+
+        LCD_ShowNum(90,14,temp_th,2,12);
+        printf("Set temp %d\n", temp_th);
+    }
+}
 
 //====================================
 //函数实现
-void Locate(struct MenuItem *manyou)
+void MenuFresh(void)
 {
-    printf("Now we at %s\n" ,manyou->DisplayString);
+    char a = 0;
+    printf("Now we at %s\n" ,(manyou+menuid[i])->DisplayString);
+
+    LCD_Clear();
+    //Display title
+    if((manyou+menuid[i])->Parentms == 0)
+        LCD_ShowString(28,0, (const unsigned char *)"Main");
+    else
+        LCD_ShowString(28,0, (const unsigned char *)(manyou->Parentms+menuid[i-1])->DisplayString);
+
+    LCD_DrawLine(0,13,1,128);
+    //display body context
+    for(a=0; a<(manyou+menuid[i])->MenuCount; a++)
+    {
+        LCD_ShowString(10,12*(a+1)+2, (const unsigned char *)((manyou+((menuid[i]>3)?(menuid[i]-3+a):a))->DisplayString));
+    }
+
+    //display select
+    LCD_ShowString(1,12*(((menuid[i]>3)?3:menuid[i])+1)+2, (const unsigned char *)">");
 }
 
-void Run(struct MenuItem *manyou)
+void Run(void)
 {
-    (*(manyou->Subs))(manyou);
+    (*((manyou+menuid[i])->Subs))(manyou+menuid[i]);
 }
 
 void Nop(void)
 {}
 
-void DoSomething(struct MenuItem *manyou)
+void DoSomething(void)
 {
-    printf("we have done %s\n" ,manyou->DisplayString);
+    printf("we have done %s\n" , (manyou+menuid[i])->DisplayString);
+    LCD_ShowString(1,14, (const unsigned char *)"Do some sthing");
 }
 
-void GameOver(void)
+void TurnBack(void)
 {
-    over=1;
-    printf("Now Game is Over ");
-    KEY_Scan();
-}
-
-//主函数
-int aaaaa(void)
-{
-    char charin; //输入的字符
-    char menuid[3]={0,0,0}; //某一级的菜单的偏移量的记录数组
-    char i=0; //上面数组的下标值
-
-    struct MenuItem *manyou; //漫游,在菜单中漫游
-
-    manyou=&m0_main[0]; //开始的位置
-    Locate(manyou); //输出
-
-    while(!over) //如果还没完
+    printf("Now Turn Back \r\n");
+    
+    if((manyou+menuid[i])->Parentms != Null)
     {
-	charin=KEY_Scan(); //读取键盘字符
-	switch(charin) //根据字符跳转
+		manyou=(manyou+menuid[i])->Parentms;
+		i--;
+    }
+    else
 	{
-            case '0': //到同级菜单的后一项
+		printf("You are at the top of menu");
+    }
+
+    MenuFresh();
+}
+
+void dump_array(void)
+{
+    int a;
+    printf("===========");
+    for(a=0;a<5;a++)
+    {
+        printf("%d \t", menuid[a]);
+    }
+    printf("=============\n");
+}
+
+int menu_update(KEY key_val, DisplayStatus status)
+{
+    if(status == MENU_ENTRY)
+    {
+        MenuFresh();
+        return 0;
+    }
+
+	switch(key_val) //根据字符跳转
+	{
+        case KEY_LEFT: //到同级菜单的后一项
 	    {
-		menuid[i]++;
-		if (menuid[i]>manyou->MenuCount-1) menuid[i]=0;//可以看到MenuCount项是必要的
-		    Locate(manyou+menuid[i]);
-		break;
+	         menuid[i]++;
+	         if(menuid[i] > manyou->MenuCount-1)
+                 menuid[i]=0;//可以看到MenuCount项是必要的
+		     break;
 	    }
-            case '1': //到同级菜单的前一项
+        case KEY_RIGHT: //到同级菜单的前一项
 	    {
-		if (menuid[i]==0) menuid[i]=manyou->MenuCount-1;//可以看到MenuCount项是必要的
-		else menuid[i]--;
-		Locate(manyou+menuid[i]);
-		break;
+		    if(menuid[i]==0)
+                menuid[i]=manyou->MenuCount-1;//可以看到MenuCount项是必要的
+		    else
+                menuid[i]--;
+		    break;
 	    }
-            case '+': //到下一级菜单,无下级时执行某功能
+        case KEY_ENTER: //到下一级菜单,无下级时执行某功能
 	    {
-		if ((manyou+menuid[i])->Childrenms !=Null)
-		{
-		    manyou=(manyou+menuid[i])->Childrenms;
-		    i++;
-		    menuid[i]=0;
-		    Locate(manyou+menuid[i]);
-		}
-		else
-		{
-		    Run(manyou+menuid[i]);
-		}
-		break;
+            if(!(strncmp(((manyou+menuid[i])->DisplayString), "Dis", 3)))
+            {
+                menuid[0]=0;
+                i=0;
+                manyou=&m0_main[0];
+                return 1;
+            }
+
+		    if((manyou+menuid[i])->Childrenms != Null)
+		    {
+		        manyou=(manyou+menuid[i])->Childrenms;
+		        i++;
+		        menuid[i]=0;
+                
+		    }
+		    else
+		    {
+		        Run();
+		    }
+		    break;
 	    }
-            case '-': //到上一级菜单,无上级时给出些提示
-	    {
-		if ((manyou+menuid[i])->Parentms !=Null)
-		{
-		    manyou=(manyou+menuid[i])->Parentms;
-		    i--;
-		    Locate(manyou+menuid[i]);
-		}
-		else
-		{
-		    printf("You are at the top of menu");
-		}
-	        break;
-	    } 
+        case KEY_RELEASE:
+            return 0;
 		default:  break;
 	}
-    }
+
+    MenuFresh();
+    //dump_array();
     return 0;
 }
-

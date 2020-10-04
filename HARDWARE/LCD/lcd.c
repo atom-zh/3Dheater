@@ -201,13 +201,13 @@ void LCD_ShowChinese(unsigned char  x,unsigned char  y,unsigned char  no)//œ‘ æ÷
 
   for(t=0;t<32;t++)
   {
-		temp= CHINESE[no*2][t];                      
-    for(t1=0;t1<8;t1++)
+        temp= CHINESE[no*2][t];                      
+        for(t1=0;t1<8;t1++)
 		{
 			if(temp&0x80)
 				LCD_DrawPoint(x,y,mode);
 			else
-			  LCD_DrawPoint(x,y,!mode);
+                LCD_DrawPoint(x,y,!mode);
 
 			temp<<=1;
 			y++;

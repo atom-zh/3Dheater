@@ -21,9 +21,9 @@ void Fan_Ctrl(Option ctrl)
 {
     if(ctrl){
         GPIO_SetBits(GPIOA,GPIO_FAN);
-        printf("Fan_Ctrl: GPIO_SetBits\r\n");
+        //printf("Fan_Ctrl: GPIO_SetBits\r\n");
     }else{
         GPIO_ResetBits(GPIOA,GPIO_FAN);
-        printf("Fan_Ctrl: GPIO_ResetBits\r\n");
+        //printf("Fan_Ctrl: GPIO_ResetBits\r\n");
     }
 }

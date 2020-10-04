@@ -8,6 +8,21 @@ typedef enum
     open
 }Option;
 
+/*  status machine
+ *  DisplayInfo: Just Display the Devices Info
+ *  MenuEntry: Show the main Menu
+ *  MenuCtrl: Star Menu contrl
+ *  MenuExit: Return to DisplayInfo
+ */
+typedef enum 
+{
+    MENU_INFO,
+    MENU_ENTRY,
+    MENU_CTRL,
+    MENU_EXIT
+}DisplayStatus;
+
+
 //IO·½ÏòÉèÖÃ
 #define SDA_IN()  {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=(u32)8<<28;}
 #define SDA_OUT() {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=(u32)3<<28;}

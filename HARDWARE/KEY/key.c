@@ -4,7 +4,7 @@
 #include "key.h"
 
 char knob;
-enum KEY key_val;
+KEY key_val;
 
 //按键初始化函数
 void KEY_Init(void) //IO初始化
@@ -19,11 +19,11 @@ void KEY_Init(void) //IO初始化
 	GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOB
 }
 
-void KEY_update(enum KEY Read_Key)
+void KEY_update(KEY Read_Key)
 {
-    if(Read_Key==key_right)
+    if(Read_Key==KEY_RIGHT)
         knob++;
-    else if(Read_Key==key_left)
+    else if(Read_Key==KEY_LEFT)
         knob--;
     key_val = Read_Key;
 }

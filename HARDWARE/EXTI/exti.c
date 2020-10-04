@@ -67,11 +67,11 @@ void EXTI4_IRQHandler(void)
         if(EC_A == 1)
         {
             DEBUG("knob: +1 \r\n");
-            KEY_update(key_left);
+            KEY_update(KEY_LEFT);
             delay_ms(10);
         }else{
             DEBUG("knob: -1 \r\n");
-            KEY_update(key_right);
+            KEY_update(KEY_RIGHT);
         }
 	 }
  	 EXTI_ClearITPendingBit(EXTI_Line4);
@@ -85,10 +85,10 @@ void EXTI9_5_IRQHandler(void)
 	if(EC_K==1)	
 	{
         DEBUG("key: press \r\n");
-        KEY_update(key_enter);
+        KEY_update(KEY_ENTER);
         delay_ms(10);
 	}else{
-        KEY_update(key_release);
+        KEY_update(KEY_RELEASE);
         DEBUG("key: release \r\n");
 	}	
     EXTI_ClearITPendingBit(EXTI_Line5);
