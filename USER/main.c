@@ -15,15 +15,7 @@
 #include "heating.h"
 #include "menu.h"
 
-struct _Dev_Info
-{
-    float temp;
-    unsigned int hum;
-    float weight1;
-    float weight2;
-}Dev_Info;
-
-DisplayStatus status=MENU_INFO;
+Dev_Info dev;
 
 void display_init(void)
 {
@@ -52,7 +44,7 @@ void update_temp(void)
 	
     temp=Get_Temp();
     LCD_ShowNum(100,1,temp,3,12);//显示ASCII数字 wendu
-    Dev_Info.temp = temp;
+    dev.temp = temp;
 }
 
 void update_hum(void)
@@ -60,7 +52,7 @@ void update_hum(void)
     unsigned int hum = 60;
     hum = ReadShtc3();
     LCD_ShowNum(33,1,hum,3,12);//显示ASCII数字 shidu
-    Dev_Info.hum = hum;
+    dev.hum = hum;
 }
 
 void update_weight1(void)
@@ -95,7 +87,10 @@ void update_info(void)
 
 int main(void)
 {
-    u8 key_val;
+    dev.status=MENU_INFO;
+    dev.hum_th = 60;
+    dev.temp_th = 20;
+
     delay_init();	    	 //延时函数初始化	  
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
     uart_init(115200);	 	 //串口初始化为115200
@@ -120,16 +115,16 @@ int main(void)
     while(1)
     {
         delay_ms(100);
-        key_val=KEY_Scan();
+        dev.key_val=KEY_Scan();
         //printf("KEY SCAN: val %d\r\n", key_val);
         KEY_update(0);
         
-        if(key_val == KEY_ENTER && status == MENU_INFO)
+        if(dev.key_val == KEY_ENTER && dev.status == MENU_INFO)
         {
-            status = MENU_ENTRY;
+            dev.status = MENU_ENTRY;
         }
 
-        switch(status)
+        switch(dev.status)
         {
             case MENU_INFO:
             {
@@ -141,14 +136,14 @@ int main(void)
             {
                 LCD_Clear();
                 delay_ms(100);
-                menu_update(key_val, status);
-                status = MENU_CTRL;
+                menu_update(&dev);
+                dev.status = MENU_CTRL;
                 break;
             }
             case MENU_CTRL:
             {
-                if(menu_update(key_val, status))
-                    status = MENU_EXIT;
+                if(menu_update(&dev))
+                    dev.status = MENU_EXIT;
                 break;
             }
             case MENU_EXIT:
@@ -156,19 +151,19 @@ int main(void)
                 LCD_Clear();
                 delay_ms(100);
                 display_init();
-                status = MENU_INFO;
+                dev.status = MENU_INFO;
                 break;
             }
             
             default: break;
         }
         
-        if(Dev_Info.temp > 34)
+        if(dev.temp > 34)
             Fan_Ctrl(open);
         else
             Fan_Ctrl(close);
 
-        if(Dev_Info.hum > 70)
+        if(dev.hum > 70)
             Heating_Ctrl(open);
         else
             Heating_Ctrl(close);

@@ -1,14 +1,7 @@
 #ifndef __KEY_H
 #define __KEY_H	 
 #include "sys.h"
-
-typedef enum
-{
-    KEY_RELEASE,
-    KEY_ENTER,
-    KEY_LEFT,
-    KEY_RIGHT
-}KEY;
+#include "BSP_Cfg.h"
 
 #define GPIO_EC_A (GPIO_Pin_3)
 #define GPIO_EC_B (GPIO_Pin_4)

@@ -8,6 +8,14 @@ typedef enum
     open
 }Option;
 
+typedef enum
+{
+    KEY_RELEASE,
+    KEY_ENTER,
+    KEY_LEFT,
+    KEY_RIGHT
+}KEY;
+
 /*  status machine
  *  DisplayInfo: Just Display the Devices Info
  *  MenuEntry: Show the main Menu
@@ -22,6 +30,24 @@ typedef enum
     MENU_EXIT
 }DisplayStatus;
 
+typedef struct
+{
+    int temp;
+    int temp_th;
+    int hum;
+    int hum_th;
+    
+    char temp_mod;
+    char hum_mod;
+
+    int weight1_pi;
+    int weight2_pi;
+    float weight1;
+    float weight2;
+    
+    KEY key_val;
+    DisplayStatus status;
+}Dev_Info;
 
 //IO·½ÏòÉèÖÃ
 #define SDA_IN()  {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=(u32)8<<28;}

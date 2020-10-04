@@ -6,7 +6,8 @@
 #include "delay.h"
  
 #define Null 0
- 
+Dev_Info *mdev;
+
 //结构体类型定义
 struct MenuItem
 {  
@@ -25,6 +26,11 @@ void Locate(void);
 void Run(void);
 void Display_title(void);
 void MaxTempSet(void);
+void TempModCel(void);
+void TempModFah(void);
+void MaxHumSet(void);
+
+void DoShowTempVal(void);
 
 //====================================
 //结构体声明
@@ -36,11 +42,14 @@ struct MenuItem m1_rev[2];
 struct MenuItem m1_help[2];
 
 struct MenuItem m2_temp[3];
-struct MenuItem m2_hum[3];
+struct MenuItem m2_hum[2];
 struct MenuItem m2_weight[4];
 
 struct MenuItem m3_temp_mod[3];
 struct MenuItem m3_temp_th[2];
+
+void ShowRevInfo(void);
+void ShowHelp(void);
 
 char menuid[5]={0,0,0,0,0}; //某一级的菜单的偏移量的记录数组
 char i=0; //上面数组的下标值
@@ -63,8 +72,8 @@ struct MenuItem m0_main[5]=
     {5, "Dis Info",  DoSomething,    m1_dis,     Null},
     {5, "Mod Set",   DoSomething,    m1_mod,     Null},
     {5, "Sys Set",   DoSomething,    m1_sys,     Null},
-    {5, "Rev Info",  DoSomething,    m1_rev,     Null},
-    {5, "Help",      DoSomething,    m1_help,    Null},
+    {5, "Rev Info",  ShowRevInfo,    Null,     Null},
+    {5, "Help",      ShowHelp,       Null,    Null},
 };
 
 struct MenuItem m1_dis[2]=
@@ -97,16 +106,15 @@ struct MenuItem m1_help[2]=
 
 struct MenuItem m2_temp[3]=
 {
-    {3, "Temp Mod",   DoSomething,    Null,         m1_sys},
-    {3, "Top Set",    DoSomething,    m3_temp_th,   m1_sys},
-    {3, "Exit",       TurnBack,       Null,         m1_sys},
+    {3, "Temp Mod",         DoSomething,      m3_temp_mod,  m1_sys},
+    {3, "Threshold Set",    DoSomething,      m3_temp_th,   m1_sys},
+    {3, "Exit",             TurnBack,         Null,         m1_sys},
 };
 
-struct MenuItem m2_hum[3]=
+struct MenuItem m2_hum[2]=
 {
-    {3, "Hum Mod",   DoSomething,    Null,   m1_sys},
-    {3, "Top Set",   DoSomething,    Null,   m1_sys},
-    {3, "Exit",      TurnBack,       Null,   m1_sys},
+    {2, "Hum Max:    %",    MaxHumSet,      Null,   m1_sys},
+    {2, "Exit",             TurnBack,       Null,   m1_sys},
 };
 
 struct MenuItem m2_weight[4]=
@@ -119,9 +127,9 @@ struct MenuItem m2_weight[4]=
 
 struct MenuItem m3_temp_mod[3]=
 {
-    {3, "Celsius",      DoSomething,    Null,   m2_temp},
-    {3, "Fahrenheit",   DoSomething,    Null,   m2_temp},
-    {3, "Exit",         TurnBack,       Null,   m2_temp},
+    {3, "Celsius:",      TempModCel,    Null,   m2_temp},
+    {3, "Fahrenheit:",   TempModFah,    Null,   m2_temp},
+    {3, "Exit",          TurnBack,      Null,   m2_temp},
 };
 
 struct MenuItem m3_temp_th[2]=
@@ -130,9 +138,9 @@ struct MenuItem m3_temp_th[2]=
     {2, "Exit",              TurnBack,       Null,   m2_temp},
 };
 
-void MaxTempSet(void)
+
+void TempModCel(void)
 {
-    char temp_th=25;
     KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
@@ -142,20 +150,88 @@ void MaxTempSet(void)
         key_val = KEY_Scan();
         KEY_update(0);
         delay_ms(100);
-        if(temp_th > 99)
-            temp_th = 100;
-        else if(temp_th < 1)
-            temp_th = 0;
 
         if(key_val == KEY_RIGHT)
-            temp_th++;
+            mdev->hum_mod = 0;
         else if(key_val == KEY_LEFT)
-            temp_th--;
-
-        LCD_ShowNum(90,14,temp_th,2,12);
-        printf("Set temp %d\n", temp_th);
+            mdev->hum_mod = 1;
+            
+        LCD_ShowString(100,26, (const unsigned char *)(mdev->hum_mod?"Y":"N"));
     }
 }
+
+void TempModFah(void)
+{
+    KEY key_val;
+    delay_ms(100);
+    key_val = KEY_Scan();
+    KEY_update(0);
+    while(key_val != KEY_ENTER)
+    {
+        key_val = KEY_Scan();
+        KEY_update(0);
+        delay_ms(100);
+
+        if(key_val == KEY_RIGHT)
+            mdev->temp_mod = 0;
+        else if(key_val == KEY_LEFT)
+            mdev->temp_mod = 1;
+        LCD_ShowString(100,26, (const unsigned char *)(mdev->hum_mod?"Y":"N"));
+    }
+}
+
+void MaxTempSet(void)
+{
+    KEY key_val;
+    delay_ms(100);
+    key_val = KEY_Scan();
+    KEY_update(0);
+    while(key_val != KEY_ENTER)
+    {
+        key_val = KEY_Scan();
+        KEY_update(0);
+        delay_ms(100);
+        if(mdev->temp_th > 99)
+            mdev->temp_th = 100;
+        else if(mdev->temp_th < 1)
+            mdev->temp_th = 0;
+
+        if(key_val == KEY_RIGHT)
+            mdev->temp_th++;
+        else if(key_val == KEY_LEFT)
+            mdev->temp_th--;
+
+        LCD_ShowNum(90,14,mdev->temp_th,2,12);
+        printf("Set temp %d\n", mdev->temp_th);
+    }
+}
+
+void MaxHumSet(void)
+{
+    KEY key_val;
+    delay_ms(100);
+    key_val = KEY_Scan();
+    KEY_update(0);
+    while(key_val != KEY_ENTER)
+    {
+        key_val = KEY_Scan();
+        KEY_update(0);
+        delay_ms(100);
+        if(mdev->hum_th > 99)
+            mdev->hum_th = 100;
+        else if(mdev->hum_th < 1)
+            mdev->hum_th = 0;
+
+        if(key_val == KEY_RIGHT)
+            mdev->hum_th++;
+        else if(key_val == KEY_LEFT)
+            mdev->hum_th--;
+
+        LCD_ShowNum(90,14,mdev->hum_th,2,12);
+        printf("Set temp %d\n", mdev->hum_th);
+    }
+}
+
 
 //====================================
 //函数实现
@@ -193,7 +269,26 @@ void Nop(void)
 void DoSomething(void)
 {
     printf("we have done %s\n" , (manyou+menuid[i])->DisplayString);
-    LCD_ShowString(1,14, (const unsigned char *)"Do some sthing");
+}
+
+void DoShowTempVal(void)
+{
+    LCD_ShowNum(90,14,mdev->temp_th,2,12);
+}
+
+void ShowRevInfo(void)
+{
+    LCD_Clear();
+    LCD_ShowString(10,14, (const unsigned char *)"SW: V1.0");
+    delay_ms(1000);
+}
+
+void ShowHelp(void)
+{
+    LCD_Clear();
+    LCD_ShowString(10,14, (const unsigned char *)"3D Printers");
+    LCD_ShowString(10,26, (const unsigned char *)"PH:133xxxxxx");
+    delay_ms(1000);
 }
 
 void TurnBack(void)
@@ -224,15 +319,17 @@ void dump_array(void)
     printf("=============\n");
 }
 
-int menu_update(KEY key_val, DisplayStatus status)
+int menu_update(Dev_Info *dev)
 {
-    if(status == MENU_ENTRY)
+    mdev = dev;
+
+    if(dev->status == MENU_ENTRY)
     {
         MenuFresh();
         return 0;
     }
 
-	switch(key_val) //根据字符跳转
+	switch(dev->key_val) //根据字符跳转
 	{
         case KEY_LEFT: //到同级菜单的后一项
 	    {
