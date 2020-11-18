@@ -4,20 +4,20 @@
 #include "stm32f10x.h"
 
 /*
-GND: µçÔ´µØ
-VCC: µçÔ´Õı 3-5V
-D0: SPIÊ±ÖÓ
-D1: SPIÊı¾İ  MOSI
-RES: ¸´Î»
-DC: Êı¾İÃüÁîÇĞ»»
-CS: Æ¬Ñ¡£¬¿É½ÓµØ
+GND: ç”µæºåœ°
+VCC: ç”µæºæ­£ 3-5V
+D0: SPIæ—¶é’Ÿ
+D1: SPIæ•°æ®  MOSI
+RES: å¤ä½
+DC: æ•°æ®å‘½ä»¤åˆ‡æ¢
+CS: ç‰‡é€‰ï¼Œå¯æ¥åœ°
 */
-//³õÊ¼»¯SSD1306	
+//åˆå§‹åŒ–SSD1306	
 #define OLED_DC		GPIO_Pin_10
 #define OLED_RES	GPIO_Pin_11
 #define OLED_CS		GPIO_Pin_12
 
-//-----------------OLED¶Ë¿Ú¶¨Òå----------------
+//-----------------OLEDç«¯å£å®šä¹‰----------------
 #define OLED_DC_Clr() GPIO_ResetBits(GPIOB,OLED_DC) //DC
 #define OLED_DC_Set() GPIO_SetBits(GPIOB,OLED_DC)
 
@@ -27,10 +27,10 @@ CS: Æ¬Ñ¡£¬¿É½ÓµØ
 #define OLED_CS_Clr()  GPIO_ResetBits(GPIOB,OLED_CS) //CS
 #define OLED_CS_Set()  GPIO_SetBits(GPIOB,OLED_CS)
 
-#define OLED_CMD  0	//Ğ´ÃüÁî
-#define OLED_DATA 1	//Ğ´Êı¾İ
+#define OLED_CMD  0	//å†™å‘½ä»¤
+#define OLED_DATA 1	//å†™æ•°æ®
 
-//OLED¿ØÖÆÓÃº¯Êı
+//OLEDæ§åˆ¶ç”¨å‡½æ•°
 void OLED_WR_Byte(unsigned char  dat,unsigned char  cmd);	    
 void OLED_Display_On(void);
 void OLED_Display_Off(void);

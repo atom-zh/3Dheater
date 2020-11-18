@@ -2,7 +2,7 @@
 #include "delay.h"
 #include "usart.h"
 
-const double Temp_Tab_10K[]=															//3950-10K×èÖµ±í
+const double Temp_Tab_10K[]=															//3950-10Ké˜»å€¼è¡¨
 {
  179.2666, 168.4053, 158.2726, 148.8151, 139.9837, 131.7332, 124.0216, 116.8107, 110.0648, 103.7512,  //-30
  97.8396, 92.3020, 87.1124, 82.2471, 77.6837, 73.4018, 69.3823, 65.6077, 62.0616, 58.7288,            //-20
@@ -21,7 +21,7 @@ const double Temp_Tab_10K[]=															//3950-10K×èÖµ±í
  0.5002                                                                                               //110
 };
 
-const double Temp_Tab_50K[]={															//3950-50K×èÖµ±í
+const double Temp_Tab_50K[]={															//3950-50Ké˜»å€¼è¡¨
 	
 	911.9977,866.0101,821.9230,779.4510,738.4196,698.7468,660.4077,623.4194,587.8218,553.6648,	//-30~-21
 	521.0003,489.8737,460.3197,432.3588,405.9971,381.2256,358.0213,336.3482,316.1589,297.3974,	//-20~-11
@@ -44,60 +44,60 @@ const double Temp_Tab_50K[]={															//3950-50K×èÖµ±í
 	
 };
 
-//³õÊ¼»¯ADC
-//ÕâÀïÎÒÃÇ½öÒÔ¹æÔòÍ¨µÀÎªÀı
-//ÎÒÃÇÄ¬ÈÏ½«¿ªÆôÍ¨µÀ0~3																	   
+//åˆå§‹åŒ–ADC
+//è¿™é‡Œæˆ‘ä»¬ä»…ä»¥è§„åˆ™é€šé“ä¸ºä¾‹
+//æˆ‘ä»¬é»˜è®¤å°†å¼€å¯é€šé“0~3																	   
 void  Temp_Init(void)
 { 	
 	ADC_InitTypeDef ADC_InitStructure; 
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |RCC_APB2Periph_ADC1, ENABLE );	  //Ê¹ÄÜADC1Í¨µÀÊ±ÖÓ
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |RCC_APB2Periph_ADC1, ENABLE );	  //ä½¿èƒ½ADC1é€šé“æ—¶é’Ÿ
  
 
-	RCC_ADCCLKConfig(RCC_PCLK2_Div6);   //ÉèÖÃADC·ÖÆµÒò×Ó6 72M/6=12,ADC×î´óÊ±¼ä²»ÄÜ³¬¹ı14M
+	RCC_ADCCLKConfig(RCC_PCLK2_Div6);   //è®¾ç½®ADCåˆ†é¢‘å› å­6 72M/6=12,ADCæœ€å¤§æ—¶é—´ä¸èƒ½è¶…è¿‡14M
 
-	//PA1 ×÷ÎªÄ£ÄâÍ¨µÀÊäÈëÒı½Å                         
+	//PA1 ä½œä¸ºæ¨¡æ‹Ÿé€šé“è¾“å…¥å¼•è„š                         
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;		//Ä£ÄâÊäÈëÒı½Å
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;		//æ¨¡æ‹Ÿè¾“å…¥å¼•è„š
 	GPIO_Init(GPIOA, &GPIO_InitStructure);	
 
-	ADC_DeInit(ADC1);  //¸´Î»ADC1 
+	ADC_DeInit(ADC1);  //å¤ä½ADC1 
 
-	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;	//ADC¹¤×÷Ä£Ê½:ADC1ºÍADC2¹¤×÷ÔÚ¶ÀÁ¢Ä£Ê½
-	ADC_InitStructure.ADC_ScanConvMode = DISABLE;	//Ä£Êı×ª»»¹¤×÷ÔÚµ¥Í¨µÀÄ£Ê½
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;	//Ä£Êı×ª»»¹¤×÷ÔÚµ¥´Î×ª»»Ä£Ê½
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;	//×ª»»ÓÉÈí¼ş¶ø²»ÊÇÍâ²¿´¥·¢Æô¶¯
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	//ADCÊı¾İÓÒ¶ÔÆë
-	ADC_InitStructure.ADC_NbrOfChannel = 1;	//Ë³Ğò½øĞĞ¹æÔò×ª»»µÄADCÍ¨µÀµÄÊıÄ¿
-	ADC_Init(ADC1, &ADC_InitStructure);	//¸ù¾İADC_InitStructÖĞÖ¸¶¨µÄ²ÎÊı³õÊ¼»¯ÍâÉèADCxµÄ¼Ä´æÆ÷   
+	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;	//ADCå·¥ä½œæ¨¡å¼:ADC1å’ŒADC2å·¥ä½œåœ¨ç‹¬ç«‹æ¨¡å¼
+	ADC_InitStructure.ADC_ScanConvMode = DISABLE;	//æ¨¡æ•°è½¬æ¢å·¥ä½œåœ¨å•é€šé“æ¨¡å¼
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;	//æ¨¡æ•°è½¬æ¢å·¥ä½œåœ¨å•æ¬¡è½¬æ¢æ¨¡å¼
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;	//è½¬æ¢ç”±è½¯ä»¶è€Œä¸æ˜¯å¤–éƒ¨è§¦å‘å¯åŠ¨
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	//ADCæ•°æ®å³å¯¹é½
+	ADC_InitStructure.ADC_NbrOfChannel = 1;	//é¡ºåºè¿›è¡Œè§„åˆ™è½¬æ¢çš„ADCé€šé“çš„æ•°ç›®
+	ADC_Init(ADC1, &ADC_InitStructure);	//æ ¹æ®ADC_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–å¤–è®¾ADCxçš„å¯„å­˜å™¨   
 
   
-	ADC_Cmd(ADC1, ENABLE);	//Ê¹ÄÜÖ¸¶¨µÄADC1
+	ADC_Cmd(ADC1, ENABLE);	//ä½¿èƒ½æŒ‡å®šçš„ADC1
 	
-	ADC_ResetCalibration(ADC1);	//Ê¹ÄÜ¸´Î»Ğ£×¼  
+	ADC_ResetCalibration(ADC1);	//ä½¿èƒ½å¤ä½æ ¡å‡†  
 	 
-	while(ADC_GetResetCalibrationStatus(ADC1));	//µÈ´ı¸´Î»Ğ£×¼½áÊø
+	while(ADC_GetResetCalibrationStatus(ADC1));	//ç­‰å¾…å¤ä½æ ¡å‡†ç»“æŸ
 	
-	ADC_StartCalibration(ADC1);	 //¿ªÆôADĞ£×¼
+	ADC_StartCalibration(ADC1);	 //å¼€å¯ADæ ¡å‡†
  
-	while(ADC_GetCalibrationStatus(ADC1));	 //µÈ´ıĞ£×¼½áÊø
+	while(ADC_GetCalibrationStatus(ADC1));	 //ç­‰å¾…æ ¡å‡†ç»“æŸ
  
-//	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//Ê¹ÄÜÖ¸¶¨µÄADC1µÄÈí¼ş×ª»»Æô¶¯¹¦ÄÜ
+//	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//ä½¿èƒ½æŒ‡å®šçš„ADC1çš„è½¯ä»¶è½¬æ¢å¯åŠ¨åŠŸèƒ½
 
 }				  
-//»ñµÃADCÖµ
-//ch:Í¨µÀÖµ 0~3
+//è·å¾—ADCå€¼
+//ch:é€šé“å€¼ 0~3
 static u16 Get_Vol(u8 ch)   
 {
-  	//ÉèÖÃÖ¸¶¨ADCµÄ¹æÔò×éÍ¨µÀ£¬Ò»¸öĞòÁĞ£¬²ÉÑùÊ±¼ä
-	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5 );	//ADC1,ADCÍ¨µÀ,²ÉÑùÊ±¼äÎª239.5ÖÜÆÚ	  			    
+  	//è®¾ç½®æŒ‡å®šADCçš„è§„åˆ™ç»„é€šé“ï¼Œä¸€ä¸ªåºåˆ—ï¼Œé‡‡æ ·æ—¶é—´
+	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5 );	//ADC1,ADCé€šé“,é‡‡æ ·æ—¶é—´ä¸º239.5å‘¨æœŸ	  			    
   
-	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//Ê¹ÄÜÖ¸¶¨µÄADC1µÄÈí¼ş×ª»»Æô¶¯¹¦ÄÜ	
+	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//ä½¿èƒ½æŒ‡å®šçš„ADC1çš„è½¯ä»¶è½¬æ¢å¯åŠ¨åŠŸèƒ½	
 	 
-	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));//µÈ´ı×ª»»½áÊø
+	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));//ç­‰å¾…è½¬æ¢ç»“æŸ
 
-	return ADC_GetConversionValue(ADC1);	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
+	return ADC_GetConversionValue(ADC1);	//è¿”å›æœ€è¿‘ä¸€æ¬¡ADC1è§„åˆ™ç»„çš„è½¬æ¢ç»“æœ
 }
 
 static u16 Get_Vol_Avg(u8 ch,u8 times)
@@ -113,12 +113,12 @@ static u16 Get_Vol_Avg(u8 ch,u8 times)
 } 	 
 
 /******************************************
-* º¯ÊıÃû: Binary_Search
-* Ãè  Êö: ÕÛ°ë²éÕÒ·¨
-* Êä  Èë: ĞèÒª²éÕÒµÄÊı£¬²éÕÒµÄÊı×é£¬Êı×éµÄ×î´óÖµ
-* ·µ  »Ø: ²éÕÒÊıµÄÎ»ÖÃ¡£
+* å‡½æ•°å: Binary_Search
+* æ  è¿°: æŠ˜åŠæŸ¥æ‰¾æ³•
+* è¾“  å…¥: éœ€è¦æŸ¥æ‰¾çš„æ•°ï¼ŒæŸ¥æ‰¾çš„æ•°ç»„ï¼Œæ•°ç»„çš„æœ€å¤§å€¼
+* è¿”  å›: æŸ¥æ‰¾æ•°çš„ä½ç½®ã€‚
 ******************************************/
-static int Binary_Search(double Search_Num,double const *Temp_Tab,unsigned char High)	//ÕÛ°ë²éÕÒ·¨
+static int Binary_Search(double Search_Num,double const *Temp_Tab,unsigned char High)	//æŠ˜åŠæŸ¥æ‰¾æ³•
 {
 	int Low = 0,Mid;
 	if(Search_Num > Temp_Tab[0]) 
@@ -172,22 +172,22 @@ static int Binary_Search(double Search_Num,double const *Temp_Tab,unsigned char 
 }
 
 /******************************************
-* º¯ÊıÃû: Check_Vol
-* Ãè  Êö: ÅĞ¶Ï¶Á»ØÀ´µÄµçÑ¹
-* Êä  Èë: µçÑ¹£¬´«¸ĞÆ÷ĞÍºÅ
-* ·µ  »Ø: ÅĞ¶Ï×´Ì¬
+* å‡½æ•°å: Check_Vol
+* æ  è¿°: åˆ¤æ–­è¯»å›æ¥çš„ç”µå‹
+* è¾“  å…¥: ç”µå‹ï¼Œä¼ æ„Ÿå™¨å‹å·
+* è¿”  å›: åˆ¤æ–­çŠ¶æ€
 ******************************************/
-static unsigned char Check_Vol(double Voltage,unsigned char NTC)		//ÅĞ¶Ï¶Á»ØÀ´µÄµçÑ¹
+static unsigned char Check_Vol(double Voltage,unsigned char NTC)		//åˆ¤æ–­è¯»å›æ¥çš„ç”µå‹
 {
 	if(0.0 == Voltage)
 	{
-		printf("Error:NTC_%dK´«¸ĞÆ÷¶ÌÂ·£¡\n",NTC);			//Ë®ÎÂ¶ÁÈ¡´íÎó´ÎÊı
+		printf("Error:NTC_%dKä¼ æ„Ÿå™¨çŸ­è·¯ï¼\n",NTC);			//æ°´æ¸©è¯»å–é”™è¯¯æ¬¡æ•°
 		return Fail;
 	}else
 	{
 		if(Power_Vol == Voltage)
 		{
-			printf("Error:NTC_%dK´«¸ĞÆ÷Î´Á¬½Ó»ò´®Áªµç×è¶ÌÂ·£¡\n",NTC);			//Ë®ÎÂ¶ÁÈ¡´íÎó´ÎÊı
+			printf("Error:NTC_%dKä¼ æ„Ÿå™¨æœªè¿æ¥æˆ–ä¸²è”ç”µé˜»çŸ­è·¯ï¼\n",NTC);			//æ°´æ¸©è¯»å–é”™è¯¯æ¬¡æ•°
 			return Fail;
 		}
 	}
@@ -195,74 +195,74 @@ static unsigned char Check_Vol(double Voltage,unsigned char NTC)		//ÅĞ¶Ï¶Á»ØÀ´µÄ
 }
 
 /******************************************
-* º¯ÊıÃû: Read_ADC_Data_10K
-* Ãè  Êö: ¶ÁNTC_10K´«¸ĞÆ÷ÎÂ¶È
-* Êä  Èë: ÎŞ
-* ·µ  »Ø: ÎŞ
+* å‡½æ•°å: Read_ADC_Data_10K
+* æ  è¿°: è¯»NTC_10Kä¼ æ„Ÿå™¨æ¸©åº¦
+* è¾“  å…¥: æ— 
+* è¿”  å›: æ— 
 ******************************************/
-static float Read_ADC_Data_10K(void)			//¶ÁÈ¡ADCÖµ
+static float Read_ADC_Data_10K(void)			//è¯»å–ADCå€¼
 {
 	float Temp_10K;
-	double Voltage,Resistance;		//µçÑ¹,µç×è
+	double Voltage,Resistance;		//ç”µå‹,ç”µé˜»
 	unsigned char Binaty;
 	unsigned int ADC_Value;
 //	unsigned char List_Length;
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADCÍ¨µÀ3,¹æÔò²ÉÑùË³ĞòÖµÎª1,²ÉÑùÊ±¼äÎª239.5ÖÜÆÚ         
-	ADC_SoftwareStartConvCmd(ADC1, ENABLE);        //Æô¶¯ÉÏÃæÉèÖÃºÃµÄÒ»¸öÍ¨µÀ£¬½øĞĞ×ª»»       
-	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);//µÈ´ıEOCÖÃÎ»
-	ADC_Value = ADC_GetConversionValue(ADC1);  		//°ÑÊı¾İ¼Ä´æÆ÷µÄÖµ¶Á×ß
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADCé€šé“3,è§„åˆ™é‡‡æ ·é¡ºåºå€¼ä¸º1,é‡‡æ ·æ—¶é—´ä¸º239.5å‘¨æœŸ         
+	ADC_SoftwareStartConvCmd(ADC1, ENABLE);        //å¯åŠ¨ä¸Šé¢è®¾ç½®å¥½çš„ä¸€ä¸ªé€šé“ï¼Œè¿›è¡Œè½¬æ¢       
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);//ç­‰å¾…EOCç½®ä½
+	ADC_Value = ADC_GetConversionValue(ADC1);  		//æŠŠæ•°æ®å¯„å­˜å™¨çš„å€¼è¯»èµ°
 	
-	DEBUG("ADC_Value_10K£º%d\n",ADC_Value);
-	Voltage = Power_Vol*ADC_Value/4095;					//3.3VÊÇ´®ÁªµçÂ·ÖĞµÄµçÔ´µçÑ¹£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
-	DEBUG("Voltage_10K£º%f\n",Voltage);
-	if(Fail == Check_Vol(Voltage,NTC_10K))			//ÅĞ¶Ï¶Á»ØÀ´µÄµçÑ¹
+	DEBUG("ADC_Value_10Kï¼š%d\n",ADC_Value);
+	Voltage = Power_Vol*ADC_Value/4095;					//3.3Væ˜¯ä¸²è”ç”µè·¯ä¸­çš„ç”µæºç”µå‹ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
+	DEBUG("Voltage_10Kï¼š%f\n",Voltage);
+	if(Fail == Check_Vol(Voltage,NTC_10K))			//åˆ¤æ–­è¯»å›æ¥çš„ç”µå‹
 	{
 		return -1;
 	}
-	Resistance = (RES_10K*Voltage/(Power_Vol-Voltage));		//RES_50Kµ¥Î»k¦¸£»ÎÂ¶È´«¸ĞÆ÷´®Áª·ÖÑ¹µç×è£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
-	DEBUG("Resistance_10K£º%f\n",Resistance);
-	Binaty = Binary_Search(Resistance,Temp_Tab_10K,Length_10K);			//140ÊÇTemp_Tab_50KÊı×éµÄ³¤¶È
-	DEBUG("Binary_Search_10K£º%d\n",Binaty);
-	Temp_10K = Binaty - 30;										//Êı×éÆğÊ¼ÊÇ-30¶È£¬ÕâÀïĞèÒª¼õ30£»
-	printf("NTC_10KÎÂ¶È£º%0.1f¡æ¡£\n", Temp_10K);
+	Resistance = (RES_10K*Voltage/(Power_Vol-Voltage));		//RES_50Kå•ä½kÎ©ï¼›æ¸©åº¦ä¼ æ„Ÿå™¨ä¸²è”åˆ†å‹ç”µé˜»ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
+	DEBUG("Resistance_10Kï¼š%f\n",Resistance);
+	Binaty = Binary_Search(Resistance,Temp_Tab_10K,Length_10K);			//140æ˜¯Temp_Tab_50Kæ•°ç»„çš„é•¿åº¦
+	DEBUG("Binary_Search_10Kï¼š%d\n",Binaty);
+	Temp_10K = Binaty - 30;										//æ•°ç»„èµ·å§‹æ˜¯-30åº¦ï¼Œè¿™é‡Œéœ€è¦å‡30ï¼›
+	printf("NTC_10Kæ¸©åº¦ï¼š%0.1fâ„ƒã€‚\n", Temp_10K);
 	return Temp_10K;
 }
 
 /******************************************
-* º¯ÊıÃû: Read_ADC_Data_50K
-* Ãè  Êö: ¶ÁNTC_50K´«¸ĞÆ÷ÎÂ¶È
-* Êä  Èë: ÎŞ
-* ·µ  »Ø: ÎŞ
+* å‡½æ•°å: Read_ADC_Data_50K
+* æ  è¿°: è¯»NTC_50Kä¼ æ„Ÿå™¨æ¸©åº¦
+* è¾“  å…¥: æ— 
+* è¿”  å›: æ— 
 ******************************************/
-static float Read_ADC_Data_50K(void)			//¶ÁÈ¡ADCÖµ
+static float Read_ADC_Data_50K(void)			//è¯»å–ADCå€¼
 {
 	char Temp;
-	double Voltage,Resistance;			//µçÑ¹,µç×è
+	double Voltage,Resistance;			//ç”µå‹,ç”µé˜»
 	unsigned char Binaty;
 	unsigned int ADC_Value;
 //	unsigned char List_Length;
 
-	ADC_RegularChannelConfig(ADC2, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADCÍ¨µÀ3,¹æÔò²ÉÑùË³ĞòÖµÎª1,²ÉÑùÊ±¼äÎª239.5ÖÜÆÚ         
-	ADC_SoftwareStartConvCmd(ADC2, ENABLE);        //Æô¶¯ÉÏÃæÉèÖÃºÃµÄÒ»¸öÍ¨µÀ£¬½øĞĞ×ª»»       
-	while(ADC_GetFlagStatus(ADC2, ADC_FLAG_EOC) == RESET);//µÈ´ıEOCÖÃÎ»
-	ADC_Value = ADC_GetConversionValue(ADC2);   	 //°ÑÊı¾İ¼Ä´æÆ÷µÄÖµ¶Á×ß
+	ADC_RegularChannelConfig(ADC2, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADCé€šé“3,è§„åˆ™é‡‡æ ·é¡ºåºå€¼ä¸º1,é‡‡æ ·æ—¶é—´ä¸º239.5å‘¨æœŸ         
+	ADC_SoftwareStartConvCmd(ADC2, ENABLE);        //å¯åŠ¨ä¸Šé¢è®¾ç½®å¥½çš„ä¸€ä¸ªé€šé“ï¼Œè¿›è¡Œè½¬æ¢       
+	while(ADC_GetFlagStatus(ADC2, ADC_FLAG_EOC) == RESET);//ç­‰å¾…EOCç½®ä½
+	ADC_Value = ADC_GetConversionValue(ADC2);   	 //æŠŠæ•°æ®å¯„å­˜å™¨çš„å€¼è¯»èµ°
 	
-	DEBUG("ADC_Value_50K£º%d\n",ADC_Value);
-	Voltage = Power_Vol*ADC_Value/4095;					//3.3VÊÇ´®ÁªµçÂ·ÖĞµÄµçÔ´µçÑ¹£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
-	DEBUG("Voltage_50K£º%f\n",Voltage);
-	if(Fail == Check_Vol(Voltage,NTC_50K))			//ÅĞ¶Ï¶Á»ØÀ´µÄµçÑ¹
+	DEBUG("ADC_Value_50Kï¼š%d\n",ADC_Value);
+	Voltage = Power_Vol*ADC_Value/4095;					//3.3Væ˜¯ä¸²è”ç”µè·¯ä¸­çš„ç”µæºç”µå‹ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
+	DEBUG("Voltage_50Kï¼š%f\n",Voltage);
+	if(Fail == Check_Vol(Voltage,NTC_50K))			//åˆ¤æ–­è¯»å›æ¥çš„ç”µå‹
 	{
 		return -1;
 	}
-	Resistance = (RES_50K*Voltage/(Power_Vol-Voltage));		//RES_50Kµ¥Î»k¦¸£»ÎÂ¶È´«¸ĞÆ÷´®Áª·ÖÑ¹µç×è£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
-	DEBUG("Resistance_50K£º%f\n",Resistance);
-//	List_Length=(sizeof(Temp_Tab_50K)/sizeof(Temp_Tab_50K[0]))-1;  //·½·¨ÓÃÓÚ»ñÈ¡Êı×é³¤¶È,¶ÔÓÚÖ¸Õë²»ÊÊÓÃ,Êı×éÕ¼ÄÚ´æ×Ü¿Õ¼ä£¬³ıÒÔµ¥¸öÔªËØÕ¼ÄÚ´æ¿Õ¼ä´óĞ¡
-//	DEBUG("Temp_Tab_50KÊı×é³¤¶È£º%d¡£\n",List_Length);	
-	Binaty = Binary_Search(Resistance,Temp_Tab_50K,Length_50K);			//179ÊÇTemp_Tab_50KÊı×éµÄ³¤¶È
-	DEBUG("Binary_Search_50K£º%d\n",Binaty);
-	Temp = Binaty - 30;										//Êı×éÆğÊ¼ÊÇ-30¶È£¬ÕâÀïĞèÒª¼õ30£»
-	printf("NTC_50KÎÂ¶È£º%d¡æ¡£\n",Temp);
+	Resistance = (RES_50K*Voltage/(Power_Vol-Voltage));		//RES_50Kå•ä½kÎ©ï¼›æ¸©åº¦ä¼ æ„Ÿå™¨ä¸²è”åˆ†å‹ç”µé˜»ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
+	DEBUG("Resistance_50Kï¼š%f\n",Resistance);
+//	List_Length=(sizeof(Temp_Tab_50K)/sizeof(Temp_Tab_50K[0]))-1;  //æ–¹æ³•ç”¨äºè·å–æ•°ç»„é•¿åº¦,å¯¹äºæŒ‡é’ˆä¸é€‚ç”¨,æ•°ç»„å å†…å­˜æ€»ç©ºé—´ï¼Œé™¤ä»¥å•ä¸ªå…ƒç´ å å†…å­˜ç©ºé—´å¤§å°
+//	DEBUG("Temp_Tab_50Kæ•°ç»„é•¿åº¦ï¼š%dã€‚\n",List_Length);	
+	Binaty = Binary_Search(Resistance,Temp_Tab_50K,Length_50K);			//179æ˜¯Temp_Tab_50Kæ•°ç»„çš„é•¿åº¦
+	DEBUG("Binary_Search_50Kï¼š%d\n",Binaty);
+	Temp = Binaty - 30;										//æ•°ç»„èµ·å§‹æ˜¯-30åº¦ï¼Œè¿™é‡Œéœ€è¦å‡30ï¼›
+	printf("NTC_50Kæ¸©åº¦ï¼š%dâ„ƒã€‚\n",Temp);
 	return Temp;
 }
 

@@ -43,7 +43,7 @@ void update_temp(void)
     float temp = 25;
 	
     temp=Get_Temp();
-    LCD_ShowNum(100,1,temp,3,12);//ÏÔÊ¾ASCIIÊı×Ö wendu
+    LCD_ShowNum(100,1,temp,3,12);//æ˜¾ç¤ºASCIIæ•°å­— wendu
     dev.temp = temp;
 }
 
@@ -51,7 +51,7 @@ void update_hum(void)
 {
     unsigned int hum = 60;
     hum = ReadShtc3();
-    LCD_ShowNum(33,1,hum,3,12);//ÏÔÊ¾ASCIIÊı×Ö shidu
+    LCD_ShowNum(33,1,hum,3,12);//æ˜¾ç¤ºASCIIæ•°å­— shidu
     dev.hum = hum;
 }
 
@@ -60,10 +60,10 @@ void update_weight1(void)
     long count1 = 0;
     float weight1 = 0;
 	
-    count1=HX711_W1Read()-150000; //¼ÓÁãµãÆ¯ÒÆ
+    count1=HX711_W1Read()-150000; //åŠ é›¶ç‚¹æ¼‚ç§»
     weight1=(float)count1/700; 
     printf("Weight1 is raw: count=%ld, weight=%0.3f  g\n", count1, weight1);
-    LCD_ShowNum(64,14,weight1,3,12);//ÏÔÊ¾ASCIIÊı×Ö
+    LCD_ShowNum(64,14,weight1,3,12);//æ˜¾ç¤ºASCIIæ•°å­—
 }
 
 void update_weight2(void)
@@ -71,10 +71,10 @@ void update_weight2(void)
     long count2 = 0;
     float weight2 = 0;
 	
-    count2=HX711_W2Read()-150000; //¼ÓÁãµãÆ¯ÒÆ
+    count2=HX711_W2Read()-150000; //åŠ é›¶ç‚¹æ¼‚ç§»
     weight2=(float)count2/700; 
     printf("Weight2 is raw: count=%ld, weight=%0.3f  g\n", count2, weight2);
-    LCD_ShowNum(64,26,weight2,3,12);//ÏÔÊ¾ASCIIÊı×Ö
+    LCD_ShowNum(64,26,weight2,3,12);//æ˜¾ç¤ºASCIIæ•°å­—
 }
 
 void update_info(void)
@@ -91,10 +91,10 @@ int main(void)
     dev.hum_th = 60;
     dev.temp_th = 20;
 
-    delay_init();	    	 //ÑÓÊ±º¯Êı³õÊ¼»¯	  
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//ÉèÖÃÖĞ¶ÏÓÅÏÈ¼¶·Ö×éÎª×é2£º2Î»ÇÀÕ¼ÓÅÏÈ¼¶£¬2Î»ÏìÓ¦ÓÅÏÈ¼¶
-    uart_init(115200);	 	 //´®¿Ú³õÊ¼»¯Îª115200
-    SPI2_Init(); 			 //SPI ³õÊ¼»¯ 	
+    delay_init();	    	 //å»¶æ—¶å‡½æ•°åˆå§‹åŒ–	  
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//è®¾ç½®ä¸­æ–­ä¼˜å…ˆçº§åˆ†ç»„ä¸ºç»„2ï¼š2ä½æŠ¢å ä¼˜å…ˆçº§ï¼Œ2ä½å“åº”ä¼˜å…ˆçº§
+    uart_init(115200);	 	 //ä¸²å£åˆå§‹åŒ–ä¸º115200
+    SPI2_Init(); 			 //SPI åˆå§‹åŒ– 	
 
     EXTIX_Init();
     //LED_Init();
@@ -102,7 +102,7 @@ int main(void)
     humidity_init();
     Init_Hx711();
 
-    LCD_Init();			 //³õÊ¼»¯LCD
+    LCD_Init();			 //åˆå§‹åŒ–LCD
 
     delay_ms(500);
     LCD_Clear();

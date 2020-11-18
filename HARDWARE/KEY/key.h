@@ -11,7 +11,7 @@
 #define EC_B  GPIO_ReadInputDataBit(GPIOB,GPIO_EC_B)
 #define EC_K  GPIO_ReadInputDataBit(GPIOB,GPIO_EC_K)
 
-void KEY_Init(void);//IO³õÊ¼»¯
+void KEY_Init(void);//IOåˆå§‹åŒ–
 void KEY_update(KEY Read_Key);
-u8 KEY_Scan(void);  	//°´¼üÉ¨Ãèº¯Êı					    
+u8 KEY_Scan(void);  	//æŒ‰é”®æ‰«æå‡½æ•°					    
 #endif

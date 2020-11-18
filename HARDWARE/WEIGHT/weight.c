@@ -9,7 +9,7 @@
 #define HX711_W2DOUT    GPIO_Pin_12
 
 //****************************************************
-// 初始化HX711
+// 鍒濆鍖朒X711
 //****************************************************
 void Init_Hx711(void)
 {
@@ -62,7 +62,7 @@ void Init_Hx711_W2(void)
 }
 
 //****************************************************
-//读取 HX711
+//璇诲彇 HX711
 //****************************************************
 unsigned long HX711_W1Read(void)
 {
@@ -73,7 +73,7 @@ unsigned long HX711_W1Read(void)
 	//while(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6));
 	//delay_ms(10);
         //printf("read: ");
-	GPIO_ResetBits(GPIOB,HX711_W1SCK); //拉低SCK
+	GPIO_ResetBits(GPIOB,HX711_W1SCK); //鎷変綆SCK
 	
 	while(GPIO_ReadInputDataBit(GPIOB,HX711_W1DOUT));
 	for(i=0;i<24;i++) 
@@ -99,11 +99,11 @@ unsigned long HX711_W1Read(void)
 	GPIO_ResetBits(GPIOB,HX711_W1SCK); 
 	delay_us(1);
 	
-	return val-8388608;  //减去符号位导致的数据增大
+	return val-8388608;  //鍑忓幓绗﹀彿浣嶅鑷寸殑鏁版嵁澧炲ぇ
 }
 
 //****************************************************
-//读取 HX711
+//璇诲彇 HX711
 //****************************************************
 unsigned long HX711_W2Read(void)
 {
@@ -114,7 +114,7 @@ unsigned long HX711_W2Read(void)
 	//while(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6));
 	//delay_ms(10);
         //printf("read: ");
-	GPIO_ResetBits(GPIOA,HX711_W2SCK); //拉低SCK
+	GPIO_ResetBits(GPIOA,HX711_W2SCK); //鎷変綆SCK
 	
 	while(GPIO_ReadInputDataBit(GPIOA,HX711_W2DOUT));
 	for(i=0;i<24;i++) 
@@ -140,5 +140,5 @@ unsigned long HX711_W2Read(void)
 	GPIO_ResetBits(GPIOA,HX711_W2SCK); 
 	delay_us(1);
 	
-	return val-8388608;  //减去符号位导致的数据增大
+	return val-8388608;  //鍑忓幓绗﹀彿浣嶅鑷寸殑鏁版嵁澧炲ぇ
 }

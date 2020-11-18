@@ -8,17 +8,17 @@
 #define Null 0
 Dev_Info *mdev;
 
-//½á¹¹ÌåÀàÐÍ¶¨Òå
+//ç»“æž„ä½“ç±»åž‹å®šä¹‰
 struct MenuItem
 {  
-    char MenuCount;               //½á¹¹ÌåÊý×éµÄÔªËØ¸öÊý
-    char *DisplayString;          //µ±Ç°LCDÏÔÊ¾µÄÐÅÏ¢
-    void (*Subs)();               //Ö´ÐÐµÄº¯ÊýµÄÖ¸Õë.
-    struct MenuItem *Childrenms;  //Ö¸Ïò×Ó½ÚµãµÄÖ¸Õë
-    struct MenuItem *Parentms;    //Ö¸Ïò¸¸½ÚµãµÄÖ¸Õë
+    char MenuCount;               //ç»“æž„ä½“æ•°ç»„çš„å…ƒç´ ä¸ªæ•°
+    char *DisplayString;          //å½“å‰LCDæ˜¾ç¤ºçš„ä¿¡æ¯
+    void (*Subs)();               //æ‰§è¡Œçš„å‡½æ•°çš„æŒ‡é’ˆ.
+    struct MenuItem *Childrenms;  //æŒ‡å‘å­èŠ‚ç‚¹çš„æŒ‡é’ˆ
+    struct MenuItem *Parentms;    //æŒ‡å‘çˆ¶èŠ‚ç‚¹çš„æŒ‡é’ˆ
 };
 
-//º¯ÊýÉùÃ÷
+//å‡½æ•°å£°æ˜Ž
 void Nop(void);
 void DoSomething(void);
 void TurnBack(void);
@@ -33,7 +33,7 @@ void MaxHumSet(void);
 void DoShowTempVal(void);
 
 //====================================
-//½á¹¹ÌåÉùÃ÷
+//ç»“æž„ä½“å£°æ˜Ž
 struct MenuItem m0_main[5];
 struct MenuItem m1_dis[2];
 struct MenuItem m1_mod[4];
@@ -51,12 +51,12 @@ struct MenuItem m3_temp_th[2];
 void ShowRevInfo(void);
 void ShowHelp(void);
 
-char menuid[5]={0,0,0,0,0}; //Ä³Ò»¼¶µÄ²Ëµ¥µÄÆ«ÒÆÁ¿µÄ¼ÇÂ¼Êý×é
-char i=0; //ÉÏÃæÊý×éµÄÏÂ±êÖµ
-struct MenuItem *manyou=&m0_main[0]; //ÂþÓÎ,ÔÚ²Ëµ¥ÖÐÂþÓÎ
+char menuid[5]={0,0,0,0,0}; //æŸä¸€çº§çš„èœå•çš„åç§»é‡çš„è®°å½•æ•°ç»„
+char i=0; //ä¸Šé¢æ•°ç»„çš„ä¸‹æ ‡å€¼
+struct MenuItem *manyou=&m0_main[0]; //æ¼«æ¸¸,åœ¨èœå•ä¸­æ¼«æ¸¸
 
 //====================================
-//½á¹¹ÌåÊµÏÖ
+//ç»“æž„ä½“å®žçŽ°
 /*    menu    layout                    
  *    m0          m1        m2        m3        m4
  *   main       Mod_Set  Sys_Set             
@@ -234,7 +234,7 @@ void MaxHumSet(void)
 
 
 //====================================
-//º¯ÊýÊµÏÖ
+//å‡½æ•°å®žçŽ°
 void MenuFresh(void)
 {
     char a = 0;
@@ -329,24 +329,24 @@ int menu_update(Dev_Info *dev)
         return 0;
     }
 
-	switch(dev->key_val) //¸ù¾Ý×Ö·ûÌø×ª
+	switch(dev->key_val) //æ ¹æ®å­—ç¬¦è·³è½¬
 	{
-        case KEY_LEFT: //µ½Í¬¼¶²Ëµ¥µÄºóÒ»Ïî
+        case KEY_LEFT: //åˆ°åŒçº§èœå•çš„åŽä¸€é¡¹
 	    {
 	         menuid[i]++;
 	         if(menuid[i] > manyou->MenuCount-1)
-                 menuid[i]=0;//¿ÉÒÔ¿´µ½MenuCountÏîÊÇ±ØÒªµÄ
+                 menuid[i]=0;//å¯ä»¥çœ‹åˆ°MenuCounté¡¹æ˜¯å¿…è¦çš„
 		     break;
 	    }
-        case KEY_RIGHT: //µ½Í¬¼¶²Ëµ¥µÄÇ°Ò»Ïî
+        case KEY_RIGHT: //åˆ°åŒçº§èœå•çš„å‰ä¸€é¡¹
 	    {
 		    if(menuid[i]==0)
-                menuid[i]=manyou->MenuCount-1;//¿ÉÒÔ¿´µ½MenuCountÏîÊÇ±ØÒªµÄ
+                menuid[i]=manyou->MenuCount-1;//å¯ä»¥çœ‹åˆ°MenuCounté¡¹æ˜¯å¿…è¦çš„
 		    else
                 menuid[i]--;
 		    break;
 	    }
-        case KEY_ENTER: //µ½ÏÂÒ»¼¶²Ëµ¥,ÎÞÏÂ¼¶Ê±Ö´ÐÐÄ³¹¦ÄÜ
+        case KEY_ENTER: //åˆ°ä¸‹ä¸€çº§èœå•,æ— ä¸‹çº§æ—¶æ‰§è¡ŒæŸåŠŸèƒ½
 	    {
             if(!(strncmp(((manyou+menuid[i])->DisplayString), "Dis", 3)))
             {

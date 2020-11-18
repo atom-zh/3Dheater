@@ -2,16 +2,16 @@
 #include "delay.h"
 #include "usart.h"
 
-//¼ÓÈÈ½Ó¿Ú³õÊ¼»¯
-void Heating_Init(void) //IO³õÊ¼»¯
+//åŠ çƒ­æ¥å£åˆå§‹åŒ–
+void Heating_Init(void) //IOåˆå§‹åŒ–
 { 
  	GPIO_InitTypeDef GPIO_InitStructure;
- 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//Ê¹ÄÜPORTA,PORTEÊ±ÖÓ
+ 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//ä½¿èƒ½PORTA,PORTEæ—¶é’Ÿ
 
 	GPIO_InitStructure.GPIO_Pin  = GPIO_HEATING;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; //PA0ÉèÖÃ³ÉÊä³ö
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; //PA0è®¾ç½®æˆè¾“å‡º
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);//³õÊ¼»¯GPIOA
+	GPIO_Init(GPIOA, &GPIO_InitStructure);//åˆå§‹åŒ–GPIOA
 }
 
 void Heating_Ctrl(Option ctrl)

@@ -5,8 +5,8 @@
 #include "usart.h"
 
 
-#define ACK         1             //Ó¦´ğĞÅºÅ
-#define NACK        0             //·ÇÓ¦´ğĞÅºÅ
+#define ACK         1             //åº”ç­”ä¿¡å·
+#define NACK        0             //éåº”ç­”ä¿¡å·
 
 void humidity_init(void)
 {
@@ -16,9 +16,9 @@ void humidity_init(void)
 
 
 /*================================================================
-¡¾  Name  ¡¿float ReadShtc3(char whatdo)
-¡¾Function¡¿·ÇÖ÷»úÄ£Ê½£¬¶ÁÈ¡º¯Êıº¯Êı
-¡¾  Notes ¡¿
+ã€  Name  ã€‘float ReadShtc3(char whatdo)
+ã€Functionã€‘éä¸»æœºæ¨¡å¼ï¼Œè¯»å–å‡½æ•°å‡½æ•°
+ã€  Notes ã€‘
 ================================================================*/
 unsigned int ReadShtc3(void)
 {
@@ -28,7 +28,7 @@ unsigned int ReadShtc3(void)
     IIC_Start();        
     IIC_Send_Byte(SHTC3ADDR&0xfe);           //I2C address + write + ACK  
     IIC_Wait_Ack();
-    IIC_Send_Byte(0X35);                     //Wakeup MSB  »½ĞÑ
+    IIC_Send_Byte(0X35);                     //Wakeup MSB  å”¤é†’
     IIC_Wait_Ack();
     IIC_Send_Byte(0X17);                     //Wakeup LSB
     IIC_Wait_Ack();
@@ -38,23 +38,23 @@ unsigned int ReadShtc3(void)
     IIC_Start();
     IIC_Send_Byte(SHTC3ADDR&0xfe);           //I2C address + write + ACK   	
     IIC_Wait_Ack();
-    IIC_Send_Byte(0X58);                     //Measurement command MSB Êª¶ÈÖµÓÅÏÈ ²»Ëø´æSCLÊ±ÖÓÏß
+    IIC_Send_Byte(0X58);                     //Measurement command MSB æ¹¿åº¦å€¼ä¼˜å…ˆ ä¸é”å­˜SCLæ—¶é’Ÿçº¿
     IIC_Wait_Ack();
     IIC_Send_Byte(0XE0);                     //Measurement command LSB
     IIC_Wait_Ack();
     IIC_Stop(); 
-    delay_ms(50); 														//µÈ´ı²âÁ¿Íê³É
+    delay_ms(50); 														//ç­‰å¾…æµ‹é‡å®Œæˆ
     
     IIC_Start();
-    IIC_Send_Byte(SHTC3ADDR|0x01);     			//I2C address + read  ¿ÉÍ¨¹ıACKÀ´ÅĞ¶ÏÊÇ·ñ²âÁ¿Íê³É¡£Íê³ÉÔòÓĞÏìÓ¦
+    IIC_Send_Byte(SHTC3ADDR|0x01);     			//I2C address + read  å¯é€šè¿‡ACKæ¥åˆ¤æ–­æ˜¯å¦æµ‹é‡å®Œæˆã€‚å®Œæˆåˆ™æœ‰å“åº”
     IIC_Wait_Ack();
     delay_ms(1); 
-    HumData = IIC_Read_Byte(ACK);             //Data(MSB) ÏÈ¶ÁÊª¶È
+    HumData = IIC_Read_Byte(ACK);             //Data(MSB) å…ˆè¯»æ¹¿åº¦
     HumData=HumData<<8;
     HumData |= IIC_Read_Byte(ACK);            //Data(LSB)
     IIC_Read_Byte(ACK);  
 
-    TempData = IIC_Read_Byte(ACK);            //Data(MSB) ºó¶ÁÎÂ¶È
+    TempData = IIC_Read_Byte(ACK);            //Data(MSB) åè¯»æ¸©åº¦
     TempData=TempData<<8;
     TempData |= IIC_Read_Byte(ACK);           //Data(LSB)
     IIC_Read_Byte(NACK); 
@@ -63,18 +63,18 @@ unsigned int ReadShtc3(void)
     IIC_Start();        
     IIC_Send_Byte(SHTC3ADDR&0xfe);           //I2C address + write + ACK  
     IIC_Wait_Ack();        
-    IIC_Send_Byte(0XB0);                     //Sleep MSB ½øÈëĞİÃß
+    IIC_Send_Byte(0XB0);                     //Sleep MSB è¿›å…¥ä¼‘çœ 
     IIC_Wait_Ack();
     IIC_Send_Byte(0X98);                     //Sleep LSB
     IIC_Wait_Ack();
     IIC_Stop();  
 
     /*-- calculate relative humidity [%RH] --*/ 
-    HumData =(HumData*100.0)/65536;                 //¹«Ê½: RH%=100 * SRH/2^16                  
+    HumData =(HumData*100.0)/65536;                 //å…¬å¼: RH%=100 * SRH/2^16                  
     DEBUG("Hum:%d \r\n", HumData);
     
-    /*-- calculate temperature [¡ãC] --*/
-    TempData = (TempData*175.0)/65536-45;      //¹«Ê½:T= -45 + 175 * ST/2^16       
+    /*-- calculate temperature [Â°C] --*/
+    TempData = (TempData*175.0)/65536-45;      //å…¬å¼:T= -45 + 175 * ST/2^16       
     DEBUG("Temp:%d \r\n", TempData);
     return HumData;
 }

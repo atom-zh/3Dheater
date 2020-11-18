@@ -6,17 +6,17 @@
 char knob;
 KEY key_val;
 
-//°´¼ü³õÊ¼»¯º¯Êý
-void KEY_Init(void) //IO³õÊ¼»¯
+//æŒ‰é”®åˆå§‹åŒ–å‡½æ•°
+void KEY_Init(void) //IOåˆå§‹åŒ–
 { 
  	GPIO_InitTypeDef GPIO_InitStructure;
  
- 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);//Ê¹ÄÜPORTA,PORTEÊ±ÖÓ
+ 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);//ä½¿èƒ½PORTA,PORTEæ—¶é’Ÿ
 
 	GPIO_InitStructure.GPIO_Pin  = GPIO_EC_A|GPIO_EC_B|GPIO_EC_K;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //PA0ÉèÖÃ³ÉÊäÈë£¬Ä¬ÈÏÏÂÀ­	  
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //PA0è®¾ç½®æˆè¾“å…¥ï¼Œé»˜è®¤ä¸‹æ‹‰	  
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);//³õÊ¼»¯GPIOB
+	GPIO_Init(GPIOB, &GPIO_InitStructure);//åˆå§‹åŒ–GPIOB
 }
 
 void KEY_update(KEY Read_Key)
@@ -28,15 +28,15 @@ void KEY_update(KEY Read_Key)
     key_val = Read_Key;
 }
 
-//°´¼ü´¦Àíº¯Êý
-//·µ»Ø°´¼üÖµ
-//mode:0,²»Ö§³ÖÁ¬Ðø°´;1,Ö§³ÖÁ¬Ðø°´;
-//0£¬Ã»ÓÐÈÎºÎ°´¼ü°´ÏÂ
-//1£¬KEY0°´ÏÂ
-//2£¬KEY1°´ÏÂ
-//3£¬KEY2°´ÏÂ 
-//4£¬KEY3°´ÏÂ WK_UP
-//×¢Òâ´Ëº¯ÊýÓÐÏìÓ¦ÓÅÏÈ¼¶,KEY0>KEY1>KEY2>KEY3!!
+//æŒ‰é”®å¤„ç†å‡½æ•°
+//è¿”å›žæŒ‰é”®å€¼
+//mode:0,ä¸æ”¯æŒè¿žç»­æŒ‰;1,æ”¯æŒè¿žç»­æŒ‰;
+//0ï¼Œæ²¡æœ‰ä»»ä½•æŒ‰é”®æŒ‰ä¸‹
+//1ï¼ŒKEY0æŒ‰ä¸‹
+//2ï¼ŒKEY1æŒ‰ä¸‹
+//3ï¼ŒKEY2æŒ‰ä¸‹ 
+//4ï¼ŒKEY3æŒ‰ä¸‹ WK_UP
+//æ³¨æ„æ­¤å‡½æ•°æœ‰å“åº”ä¼˜å…ˆçº§,KEY0>KEY1>KEY2>KEY3!!
 u8 KEY_Scan()
 {
     return key_val;

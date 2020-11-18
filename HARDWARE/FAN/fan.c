@@ -2,14 +2,14 @@
 #include "delay.h"
 #include "usart.h"
 
-//·çÉÈ½Ó¿Ú³õÊ¼»¯
-void Fan_Init(void) //IO³õÊ¼»¯
+//é£æ‰‡æ¥å£åˆå§‹åŒ–
+void Fan_Init(void) //IOåˆå§‹åŒ–
 { 
  	GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO|RCC_APB2Periph_GPIOA,ENABLE);
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
- 	//RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//Ê¹ÄÜPORTA,PORTEÊ±ÖÓ
+ 	//RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//ä½¿èƒ½PORTA,PORTEæ—¶é’Ÿ
     
     GPIO_InitStructure.GPIO_Pin = GPIO_FAN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;

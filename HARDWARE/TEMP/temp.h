@@ -4,14 +4,14 @@
 
 #define	Success			0x01
 #define	Fail				0x00
-#define NTC_10K			10    //NTC_10K´«¸ĞÆ÷
-#define NTC_50K			50    //NTC_50K´«¸ĞÆ÷
+#define NTC_10K			10    //NTC_10Kä¼ æ„Ÿå™¨
+#define NTC_50K			50    //NTC_50Kä¼ æ„Ÿå™¨
 
-#define Length_10K				140   	 //240ÊÇTemp_Tab_10KÊı×éµÄ³¤¶È
-#define Length_50K	      179    //179ÊÇTemp_Tab_50KÊı×éµÄ³¤¶È
-#define Power_Vol					3.3			//3.3VÊÇ´®ÁªµçÂ·ÖĞµÄµçÔ´µçÑ¹£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
-#define RES_10K						10			//µ¥Î»k¦¸£»ÎÂ¶È´«¸ĞÆ÷´®Áª·ÖÑ¹µç×è£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
-#define RES_50K						51			//µ¥Î»k¦¸£»ÎÂ¶È´«¸ĞÆ÷´®Áª·ÖÑ¹µç×è£¬¿É¸ù¾İÊµ¼ÊµçÂ·ĞŞ¸Ä
+#define Length_10K				140   	 //240æ˜¯Temp_Tab_10Kæ•°ç»„çš„é•¿åº¦
+#define Length_50K	      179    //179æ˜¯Temp_Tab_50Kæ•°ç»„çš„é•¿åº¦
+#define Power_Vol					3.3			//3.3Væ˜¯ä¸²è”ç”µè·¯ä¸­çš„ç”µæºç”µå‹ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
+#define RES_10K						10			//å•ä½kÎ©ï¼›æ¸©åº¦ä¼ æ„Ÿå™¨ä¸²è”åˆ†å‹ç”µé˜»ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
+#define RES_50K						51			//å•ä½kÎ©ï¼›æ¸©åº¦ä¼ æ„Ÿå™¨ä¸²è”åˆ†å‹ç”µé˜»ï¼Œå¯æ ¹æ®å®é™…ç”µè·¯ä¿®æ”¹
 
 void Temp_Init(void);
 float Get_Temp(void); 

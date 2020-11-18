@@ -5,13 +5,13 @@
 
 /* OLED Pin*/
 /*
-GND: µçÔ´µØ
-VCC: µçÔ´Õı 3-5V
-D0: SPIÊ±ÖÓ
-D1: SPIÊı¾İ  MOSI
-RES: ¸´Î»
-DC: Êı¾İÃüÁîÇĞ»»
-CS: Æ¬Ñ¡£¬¿É½ÓµØ
+GND: ç”µæºåœ°
+VCC: ç”µæºæ­£ 3-5V
+D0: SPIæ—¶é’Ÿ
+D1: SPIæ•°æ®  MOSI
+RES: å¤ä½
+DC: æ•°æ®å‘½ä»¤åˆ‡æ¢
+CS: ç‰‡é€‰ï¼Œå¯æ¥åœ°
 */
 
 /* LCD Pin 12864-14*/
@@ -19,21 +19,21 @@ CS: Æ¬Ñ¡£¬¿É½ÓµØ
 Pin No   |   Symbol    |   Level    |   Function
   7           DB6           H/L          SCK
   8           DB7           H/L          SI
-  9           VDD           3.3V         µçÔ´Õı
-  10          VSS           0V           µçÔ´¸º
-  11          *LED+         3.3V         ±³¹âµçÑ¹Õı¼«£¬3.3v
-  12          /CS           L            Æ¬Ñ¡ĞÅºÅ
-  13          /RES          L            ¸´Î»½Å£¬µÍµçÆ½ÓĞĞ§
-  14          A0(D/I)       H/L          ÃüÁîÊı¾İÇĞ»»£¬0£ºÃüÁî£¬1£ºÊı¾İ
+  9           VDD           3.3V         ç”µæºæ­£
+  10          VSS           0V           ç”µæºè´Ÿ
+  11          *LED+         3.3V         èƒŒå…‰ç”µå‹æ­£æï¼Œ3.3v
+  12          /CS           L            ç‰‡é€‰ä¿¡å·
+  13          /RES          L            å¤ä½è„šï¼Œä½ç”µå¹³æœ‰æ•ˆ
+  14          A0(D/I)       H/L          å‘½ä»¤æ•°æ®åˆ‡æ¢ï¼Œ0ï¼šå‘½ä»¤ï¼Œ1ï¼šæ•°æ®
 */
 
-//³õÊ¼»¯SSD1306	
+//åˆå§‹åŒ–SSD1306	
 #define LCD_BL		GPIO_Pin_9
 #define LCD_DC		GPIO_Pin_10
 #define LCD_RES	  GPIO_Pin_11
 #define LCD_CS		GPIO_Pin_12
 
-//-----------------OLED¶Ë¿Ú¶¨Òå----------------
+//-----------------OLEDç«¯å£å®šä¹‰----------------
 #define LCD_BL_Clr() GPIO_ResetBits(GPIOB,LCD_BL) //DC
 #define LCD_BL_Set() GPIO_SetBits(GPIOB,LCD_BL)
 
@@ -46,10 +46,10 @@ Pin No   |   Symbol    |   Level    |   Function
 #define LCD_CS_Clr()  GPIO_ResetBits(GPIOB,LCD_CS) //CS
 #define LCD_CS_Set()  GPIO_SetBits(GPIOB,LCD_CS)
 
-#define LCD_CMD  0	//Ğ´ÃüÁî
-#define LCD_DATA 1	//Ğ´Êı¾İ
+#define LCD_CMD  0	//å†™å‘½ä»¤
+#define LCD_DATA 1	//å†™æ•°æ®
 
-//OLED¿ØÖÆÓÃº¯Êı
+//OLEDæ§åˆ¶ç”¨å‡½æ•°
 void LCD_WR_Byte(unsigned char  dat,unsigned char  cmd);	    
 void LCD_Display_On(void);
 void LCD_Display_Off(void);
