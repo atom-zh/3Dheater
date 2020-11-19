@@ -41,8 +41,26 @@ const double Temp_Tab_50K[]={															//3950-50K阻值表
 	1.9390,1.8884,1.8392,1.7914,1.7450,1.7000,1.6563,1.6138,1.5725,1.5324,	//120~129
 	1.4934,1.4556,1.4188,1.3831,1.3484,1.3147,1.2820,1.2502,1.2193,1.1892,	//130~139
 	1.1600,1.1317,1.1041,1.0774,1.0513,1.0261,1.0015,0.9776,0.9544,0.9319 	//140~149
-	
 };
+
+const double Temp_Tab_100K[]=															//3950-100K阻值表
+{
+    179.2666, 168.4053, 158.2726, 148.8151, 139.9837, 131.7332, 124.0216, 116.8107, 110.0648, 103.7512,  //-30
+    97.8396, 92.3020, 87.1124, 82.2471, 77.6837, 73.4018, 69.3823, 65.6077, 62.0616, 58.7288,            //-20
+    55.5953, 52.6480, 49.8747, 47.2643, 44.8062, 42.4906, 40.3086, 38.2516, 36.3117, 34.4817,            //-10
+    32.7547, 31.1243, 29.5847, 28.1301, 26.7556, 25.4562, 24.2274, 23.0650, 21.9650, 20.9239,            //0
+    19.9380, 19.0041, 18.1193, 17.2807, 16.4857, 15.7317, 15.0164, 14.3376, 13.6933, 13.0816,            //10
+    12.5005, 11.9485, 11.4239, 10.9252, 10.4510, 10.0000, 9.5709, 9.1626, 8.7738, 8.4037,                //20
+    8.0512, 7.7154, 7.3953, 7.0903, 6.7995, 6.5221, 6.2576, 6.0051, 5.7642, 5.5342,                      //30
+    5.3146, 5.1049, 4.9045, 4.7130, 4.5300, 4.3551, 4.1878, 4.0278, 3.8748, 3.7283,                      //40
+    3.5882, 3.4540, 3.3255, 3.2025, 3.0846, 2.9717, 3.8635, 2.7597, 2.6603, 2.5649,                      //50
+    2.4734, 2.3856, 2.3014, 2.2206, 2.1431, 2.0686, 1.9970, 1.9283, 1.8623, 1.7989,                      //60
+    1.7380, 1.6794, 1.6231, 1.5689, 1.5168, 1.4667, 1.4185, 1.3722, 1.3275, 1.2845,                      //70
+    1.2431, 1.2033, 1.1649, 1.1279, 1.0923, 1.0580, 1.0249, 0.9930, 0.9623, 0.9326,                      //80
+    0.9040, 0.8764, 0.8498, 0.8241, 0.7994, 0.7754, 0.7523, 0.7300, 0.7085, 0.6877,                      //90
+    0.6676, 0.6482, 0.6295, 0.6113, 0.5938, 0.5769, 0.5605, 0.5447, 0.5293, 0.5145,                      //100
+    0.5002                                                                                               //110
+}
 
 //初始化ADC
 //这里我们仅以规则通道为例
@@ -83,9 +101,10 @@ void  Temp_Init(void)
  
 	while(ADC_GetCalibrationStatus(ADC1));	 //等待校准结束
  
-//	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//使能指定的ADC1的软件转换启动功能
+    //ADC_SoftwareStartConvCmd(ADC1, ENABLE);		//使能指定的ADC1的软件转换启动功能
 
 }				  
+
 //获得ADC值
 //ch:通道值 0~3
 static u16 Get_Vol(u8 ch)   
@@ -181,7 +200,7 @@ static unsigned char Check_Vol(double Voltage,unsigned char NTC)		//判断读回
 {
 	if(0.0 == Voltage)
 	{
-		printf("Error:NTC_%dK传感器短路！\n",NTC);			//水温读取错误次数
+		printf("Error:NTC_%dK传感器短路！\n",NTC);			            //水温读取错误次数
 		return Fail;
 	}else
 	{
@@ -206,7 +225,7 @@ static float Read_ADC_Data_10K(void)			//读取ADC值
 	double Voltage,Resistance;		//电压,电阻
 	unsigned char Binaty;
 	unsigned int ADC_Value;
-//	unsigned char List_Length;
+    //unsigned char List_Length;
 
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADC通道3,规则采样顺序值为1,采样时间为239.5周期         
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);        //启动上面设置好的一个通道，进行转换       
@@ -241,7 +260,7 @@ static float Read_ADC_Data_50K(void)			//读取ADC值
 	double Voltage,Resistance;			//电压,电阻
 	unsigned char Binaty;
 	unsigned int ADC_Value;
-//	unsigned char List_Length;
+    //unsigned char List_Length;
 
 	ADC_RegularChannelConfig(ADC2, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADC通道3,规则采样顺序值为1,采样时间为239.5周期         
 	ADC_SoftwareStartConvCmd(ADC2, ENABLE);        //启动上面设置好的一个通道，进行转换       
@@ -257,8 +276,8 @@ static float Read_ADC_Data_50K(void)			//读取ADC值
 	}
 	Resistance = (RES_50K*Voltage/(Power_Vol-Voltage));		//RES_50K单位kΩ；温度传感器串联分压电阻，可根据实际电路修改
 	DEBUG("Resistance_50K：%f\n",Resistance);
-//	List_Length=(sizeof(Temp_Tab_50K)/sizeof(Temp_Tab_50K[0]))-1;  //方法用于获取数组长度,对于指针不适用,数组占内存总空间，除以单个元素占内存空间大小
-//	DEBUG("Temp_Tab_50K数组长度：%d。\n",List_Length);	
+    //List_Length=(sizeof(Temp_Tab_50K)/sizeof(Temp_Tab_50K[0]))-1;  //方法用于获取数组长度,对于指针不适用,数组占内存总空间，除以单个元素占内存空间大小
+    //DEBUG("Temp_Tab_50K数组长度：%d。\n",List_Length);	
 	Binaty = Binary_Search(Resistance,Temp_Tab_50K,Length_50K);			//179是Temp_Tab_50K数组的长度
 	DEBUG("Binary_Search_50K：%d\n",Binaty);
 	Temp = Binaty - 30;										//数组起始是-30度，这里需要减30；
@@ -266,32 +285,43 @@ static float Read_ADC_Data_50K(void)			//读取ADC值
 	return Temp;
 }
 
+/******************************************
+* 函数名: Read_ADC_Data_100K
+* 描  述: 读NTC_100K传感器温度
+* 输  入: 无
+* 返  回: 无
+******************************************/
+static float Read_ADC_Data_100K(void)			//读取ADC值
+{
+	float Temp_100K;
+	double Voltage,Resistance;		            //电压,电阻
+	unsigned char Binaty;
+	unsigned int ADC_Value;
+    //unsigned char List_Length;
+
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);  //ADC1,ADC通道3,规则采样顺序值为1,采样时间为239.5周期         
+	ADC_SoftwareStartConvCmd(ADC1, ENABLE);        //启动上面设置好的一个通道，进行转换       
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);//等待EOC置位
+	ADC_Value = ADC_GetConversionValue(ADC1);  		//把数据寄存器的值读走
+	
+	DEBUG("ADC_Value_100K：%d\n",ADC_Value);
+	Voltage = Power_Vol*ADC_Value/4095;					//3.3V是串联电路中的电源电压，可根据实际电路修改
+	DEBUG("Voltage_100K：%f\n",Voltage);
+	if(Fail == Check_Vol(Voltage,NTC_100K))			//判断读回来的电压
+	{
+		return -1;
+	}
+	Resistance = (RES_100K*Voltage/(Power_Vol-Voltage));		//RES_50K单位kΩ；温度传感器串联分压电阻，可根据实际电路修改
+	DEBUG("Resistance_100K：%f\n",Resistance);
+	Binaty = Binary_Search(Resistance,Temp_Tab_100K,Length_100K);			//140是Temp_Tab_50K数组的长度
+	DEBUG("Binary_Search_100K：%d\n",Binaty);
+	Temp_100K = Binaty - 30;										//数组起始是-30度，这里需要减30；
+	printf("NTC_100K温度：%0.1f℃。\n", Temp_100K);
+	return Temp_100K;
+}
+
 float Get_Temp(void)
 {
-  return Read_ADC_Data_10K();
+  return Read_ADC_Data_100K();
 } 	 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
