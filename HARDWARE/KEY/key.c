@@ -37,7 +37,7 @@ void KEY_update(KEY Read_Key)
 //3，KEY2按下 
 //4，KEY3按下 WK_UP
 //注意此函数有响应优先级,KEY0>KEY1>KEY2>KEY3!!
-u8 KEY_Scan()
+KEY KEY_Scan()
 {
     return key_val;
 }

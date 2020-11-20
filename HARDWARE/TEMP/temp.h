@@ -6,6 +6,7 @@
 #define Fail            0x00
 #define NTC_10K         10      //NTC_10K传感器
 #define NTC_50K         50      //NTC_50K传感器
+#define NTC_100K        100     //NTC_50K传感器
 
 #define Length_10K      140     //240是Temp_Tab_10K数组的长度
 #define Length_50K      179     //179是Temp_Tab_50K数组的长度

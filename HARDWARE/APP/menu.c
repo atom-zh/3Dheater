@@ -144,11 +144,11 @@ void TempModCel(void)
     KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
-    KEY_update(0);
+    KEY_update(KEY_RELEASE);
     while(key_val != KEY_ENTER)
     {
         key_val = KEY_Scan();
-        KEY_update(0);
+        KEY_update(KEY_RELEASE);
         delay_ms(100);
 
         if(key_val == KEY_RIGHT)
@@ -165,11 +165,11 @@ void TempModFah(void)
     KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
-    KEY_update(0);
+    KEY_update(KEY_RELEASE);
     while(key_val != KEY_ENTER)
     {
         key_val = KEY_Scan();
-        KEY_update(0);
+        KEY_update(KEY_RELEASE);
         delay_ms(100);
 
         if(key_val == KEY_RIGHT)
@@ -185,11 +185,11 @@ void MaxTempSet(void)
     KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
-    KEY_update(0);
+    KEY_update(KEY_RELEASE);
     while(key_val != KEY_ENTER)
     {
         key_val = KEY_Scan();
-        KEY_update(0);
+        KEY_update(KEY_RELEASE);
         delay_ms(100);
         if(mdev->temp_th > 99)
             mdev->temp_th = 100;
@@ -211,11 +211,11 @@ void MaxHumSet(void)
     KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
-    KEY_update(0);
+    KEY_update(KEY_RELEASE);
     while(key_val != KEY_ENTER)
     {
         key_val = KEY_Scan();
-        KEY_update(0);
+        KEY_update(KEY_RELEASE);
         delay_ms(100);
         if(mdev->hum_th > 99)
             mdev->hum_th = 100;

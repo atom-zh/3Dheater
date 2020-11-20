@@ -13,5 +13,5 @@
 
 void KEY_Init(void);//IO初始化
 void KEY_update(KEY Read_Key);
-u8 KEY_Scan(void);  	//按键扫描函数					    
+KEY KEY_Scan(void);  	//按键扫描函数
 #endif

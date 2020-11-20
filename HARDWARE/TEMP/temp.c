@@ -60,7 +60,7 @@ const double Temp_Tab_100K[]=															//3950-100K阻值表
     0.9040, 0.8764, 0.8498, 0.8241, 0.7994, 0.7754, 0.7523, 0.7300, 0.7085, 0.6877,                      //90
     0.6676, 0.6482, 0.6295, 0.6113, 0.5938, 0.5769, 0.5605, 0.5447, 0.5293, 0.5145,                      //100
     0.5002                                                                                               //110
-}
+};
 
 //初始化ADC
 //这里我们仅以规则通道为例
@@ -316,7 +316,7 @@ static float Read_ADC_Data_100K(void)			//读取ADC值
 	Binaty = Binary_Search(Resistance,Temp_Tab_100K,Length_100K);			//140是Temp_Tab_50K数组的长度
 	DEBUG("Binary_Search_100K：%d\n",Binaty);
 	Temp_100K = Binaty - 30;										//数组起始是-30度，这里需要减30；
-	printf("NTC_100K温度：%0.1f℃。\n", Temp_100K);
+	printf("NTC_100K 温度：%0.1f℃。\n", Temp_100K);
 	return Temp_100K;
 }
 

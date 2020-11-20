@@ -117,7 +117,7 @@ int main(void)
         delay_ms(100);
         dev.key_val=KEY_Scan();
         //printf("KEY SCAN: val %d\r\n", key_val);
-        KEY_update(0);
+        KEY_update(KEY_RELEASE);
         
         if(dev.key_val == KEY_ENTER && dev.status == MENU_INFO)
         {
