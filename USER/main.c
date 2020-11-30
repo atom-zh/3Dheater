@@ -15,7 +15,7 @@
 #include "heating.h"
 #include "menu.h"
 
-Dev_Info dev;
+struct Dev_Info dev;
 
 void display_init(void)
 {

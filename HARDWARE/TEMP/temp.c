@@ -244,7 +244,7 @@ static float Read_ADC_Data_10K(void)			//读取ADC值
 	Binaty = Binary_Search(Resistance,Temp_Tab_10K,Length_10K);			//140是Temp_Tab_50K数组的长度
 	DEBUG("Binary_Search_10K：%d\n",Binaty);
 	Temp_10K = Binaty - 30;										//数组起始是-30度，这里需要减30；
-	printf("NTC_10K温度：%0.1f℃。\n", Temp_10K);
+	printf("NTC_10K 温度：%0.1f℃。\n", Temp_10K);
 	return Temp_10K;
 }
 

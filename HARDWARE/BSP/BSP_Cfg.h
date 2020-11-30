@@ -8,13 +8,13 @@ typedef enum
     open
 }Option;
 
-typedef enum
+enum KEY
 {
     KEY_RELEASE,
     KEY_ENTER,
     KEY_LEFT,
     KEY_RIGHT
-}KEY;
+}__attribute__((__packed__));
 
 /*  status machine
  *  DisplayInfo: Just Display the Devices Info
@@ -22,15 +22,15 @@ typedef enum
  *  MenuCtrl: Star Menu contrl
  *  MenuExit: Return to DisplayInfo
  */
-typedef enum 
+enum DisplayStatus
 {
     MENU_INFO,
     MENU_ENTRY,
     MENU_CTRL,
     MENU_EXIT
-}DisplayStatus;
+}__attribute__((__packed__));
 
-typedef struct
+struct Dev_Info
 {
     int temp;
     int temp_th;
@@ -45,9 +45,9 @@ typedef struct
     float weight1;
     float weight2;
     
-    KEY key_val;
-    DisplayStatus status;
-}Dev_Info;
+    enum KEY key_val;
+    enum DisplayStatus status;
+}__attribute__((__packed__));
 
 //IO方向设置
 #define SDA_IN()  {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=(u32)8<<28;}

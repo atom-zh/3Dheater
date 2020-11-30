@@ -6,7 +6,7 @@
 #include "delay.h"
  
 #define Null 0
-Dev_Info *mdev;
+struct Dev_Info *mdev;
 
 //结构体类型定义
 struct MenuItem
@@ -141,7 +141,7 @@ struct MenuItem m3_temp_th[2]=
 
 void TempModCel(void)
 {
-    KEY key_val;
+    enum KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
     KEY_update(KEY_RELEASE);
@@ -162,7 +162,7 @@ void TempModCel(void)
 
 void TempModFah(void)
 {
-    KEY key_val;
+    enum KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
     KEY_update(KEY_RELEASE);
@@ -182,7 +182,7 @@ void TempModFah(void)
 
 void MaxTempSet(void)
 {
-    KEY key_val;
+    enum KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
     KEY_update(KEY_RELEASE);
@@ -208,7 +208,7 @@ void MaxTempSet(void)
 
 void MaxHumSet(void)
 {
-    KEY key_val;
+    enum KEY key_val;
     delay_ms(100);
     key_val = KEY_Scan();
     KEY_update(KEY_RELEASE);
@@ -319,7 +319,7 @@ void dump_array(void)
     printf("=============\n");
 }
 
-int menu_update(Dev_Info *dev)
+int menu_update(struct Dev_Info *dev)
 {
     mdev = dev;
 

@@ -12,6 +12,6 @@
 #define EC_K  GPIO_ReadInputDataBit(GPIOB,GPIO_EC_K)
 
 void KEY_Init(void);//IO初始化
-void KEY_update(KEY Read_Key);
-KEY KEY_Scan(void);  	//按键扫描函数
+void KEY_update(enum KEY Read_Key);
+enum KEY KEY_Scan(void);  	//按键扫描函数
 #endif
