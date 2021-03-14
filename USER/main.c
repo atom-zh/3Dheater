@@ -88,8 +88,8 @@ void update_info(void)
 int main(void)
 {
     dev.status=MENU_INFO;
-    dev.hum_th = 60;
-    dev.temp_th = 20;
+    dev.set.hum_th = 60;
+    dev.set.temp_th = 20;
 
     delay_init();	    	 //延时函数初始化	  
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
@@ -111,6 +111,12 @@ int main(void)
     Fan_Init();
     Heating_Init();
     
+    //FlashReadWriteTest();
+    // Read the save data
+    printf("Now read save data!\r\n");
+    FLASH_ReadData(&dev.set);
+    Flash_Init(&dev.set);
+
     printf("Hello World!\r\n");
     while(1)
     {
@@ -158,15 +164,25 @@ int main(void)
             default: break;
         }
         
-        if(dev.temp > 34)
+        if(dev.temp > dev.set.temp_th)
+        {
             Fan_Ctrl(open);
-        else
+        } else {
             Fan_Ctrl(close);
+        }
 
-        if(dev.hum > 70)
+        if(dev.hum > dev.set.hum_th)
+        {
             Heating_Ctrl(open);
-        else
+        } else {
             Heating_Ctrl(close);
+        }
+
+        if(dev.temp > 80 || dev.hum < 20)
+        {
+            Fan_Ctrl(close);
+            Heating_Ctrl(close);
+        }
     }
 }
 

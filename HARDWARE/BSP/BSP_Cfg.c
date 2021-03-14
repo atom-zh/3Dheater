@@ -1,4 +1,5 @@
 #include "stm32f10x.h"
+#include "stm32f10x_flash.h"
 #include "BSP_Cfg.h"
 #include "delay.h"
 
@@ -191,4 +192,193 @@ unsigned char SPI2_ReadWriteByte(unsigned char TxData)
 		if(retry>2000)return 0;
 	}	  						    
 	return SPI2->DR;          //返回收到的数据				    
+}
+
+/*******************************************************/
+/***************** 内部flash 操作接口 ******************/
+/*******************************************************/
+/* 参数存储 */
+#define PARAM_SAVE_ADDR_BASE         0x0800F800
+//#define PARAM_MAX_SIZE               (1*1024)//参数大小 1KB
+
+#define PIECE_MAX_LEN  256
+
+/* FLASH page size */
+#define FLASH_PAGE_SIZE           0x400   //1KB
+#define SAVE_DATA_MAGIC           0xCDAB3412
+
+__IO FLASH_Status FLASHStatus = FLASH_COMPLETE;
+
+
+void flash_erase_page(uint8_t flashPage, uint32_t addr_base)
+{
+	FLASHStatus = FLASH_COMPLETE;
+	FLASH_Unlock();
+	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR);
+	FLASH_ErasePage(addr_base + flashPage*FLASH_PAGE_SIZE);
+	FLASH_Lock();
+}
+
+void writeFlash(uint16_t * buf_to_save, uint16_t len, uint32_t wFlashAddr)
+{
+    uint16_t count = 0;
+	FLASHStatus = FLASH_COMPLETE;
+
+	FLASH_Unlock();
+	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR);
+	while(count < len && FLASHStatus == FLASH_COMPLETE)
+	{
+		FLASH_ProgramHalfWord((wFlashAddr + count*2), buf_to_save[count]);
+		count ++;
+	}
+	FLASH_Lock();
+}
+
+void flash_erase(uint32_t size , uint32_t addr_base)
+{
+    uint32_t flashPageSum;
+	uint32_t i;
+    if(size < FLASH_PAGE_SIZE)
+    {
+        size = FLASH_PAGE_SIZE;
+    }
+
+    if((size % FLASH_PAGE_SIZE) == 0)
+    {
+        flashPageSum = size/FLASH_PAGE_SIZE;
+    }
+    else
+    {
+        flashPageSum = (size/FLASH_PAGE_SIZE) + 1;
+    }
+
+    for(i = 0; i<flashPageSum; i++)
+    {
+        flash_erase_page(i, addr_base);
+    }
+}
+
+void wFlashData(uint8_t * buf_to_save , uint16_t len , uint32_t wFlashAddr)
+{
+    uint8_t WriteFlashTempBuf[PIECE_MAX_LEN];
+    uint16_t WriteFlashTempLen = 0;
+
+    flash_erase(FLASH_PAGE_SIZE, PARAM_SAVE_ADDR_BASE);
+
+    memset(WriteFlashTempBuf, 0xEE, sizeof(WriteFlashTempBuf));
+    memcpy(WriteFlashTempBuf, buf_to_save, len);
+    WriteFlashTempLen = len;
+    if(len%2 != 0)
+    {
+        WriteFlashTempLen += 1;
+    }
+    writeFlash((uint16_t *)&WriteFlashTempBuf, WriteFlashTempLen/2, wFlashAddr);
+}
+
+void FLASH_ReadData(void *p_Readbuf)
+{
+	//p_Readbuf = (uint8_t *)(PARAM_SAVE_ADDR_BASE);
+    printf("Read date from flash\n");
+    memcpy(p_Readbuf, (uint8_t *)(PARAM_SAVE_ADDR_BASE), sizeof(struct DevParamSave));
+}
+
+void FLASH_SaveData(void *p_Writebuf)
+{
+    printf("Save date to flash \n");
+	wFlashData(p_Writebuf, sizeof(struct DevParamSave), PARAM_SAVE_ADDR_BASE);
+}
+
+void Flash_Init(struct DevParamSave *p_Initbuf)
+{
+    if (p_Initbuf->magic == SAVE_DATA_MAGIC)
+    {
+        printf("Parameter already save\n");
+    } else {
+	    memset((uint8_t *)p_Initbuf, 0, sizeof(struct DevParamSave));
+        p_Initbuf->magic = SAVE_DATA_MAGIC;
+        p_Initbuf->temp_th = 30;
+        p_Initbuf->hum_th = 50;
+	    FLASH_SaveData((uint8_t*)p_Initbuf);
+    }
+}
+
+
+/* Flash读写测试buf */
+#define BufferSize 6
+uint16_t usFlashWriteBuf[BufferSize] = {0x0101,0x0202,0x0303,0x0404,0x0505,0x0606};
+uint16_t usFlashReadBuf[BufferSize] = {0};
+
+/*******************************************************************************************************
+** 函数: FlashReadWriteTest, 内部Flash读写测试函数
+**------------------------------------------------------------------------------------------------------
+** 参数: void
+** 返回: TEST_ERROR：错误（擦除、写入错误）  TEST_SUCCESS：成功   TEST_FAILED：失败
+** 说明: 无
+********************************************************************************************************/
+int FlashReadWriteTest(void)
+{
+    int i;
+    uint32_t ucStartAddr;
+
+    /* 解锁 */
+    FLASH_Unlock();
+
+    /* 擦除操作 */
+    ucStartAddr = PARAM_SAVE_ADDR_BASE;
+    if (FLASH_COMPLETE != FLASH_ErasePage(ucStartAddr))
+    {
+        printf("Erase Error!\n");
+        return -1;
+    }
+    else
+    {
+        ucStartAddr = PARAM_SAVE_ADDR_BASE;
+        printf("擦除成功，此时FLASH中值为：\n");
+        for (i = 0; i < BufferSize; i++)
+        {
+            printf("i = %d\n", i);
+            usFlashReadBuf[i] = *(uint16_t*)ucStartAddr;
+            printf("ucFlashReadBuf[%d] = 0x%.4x\n", i, usFlashReadBuf[i]);
+            ucStartAddr += 2;
+        }
+    }
+
+    /* 写入操作 */
+    ucStartAddr = PARAM_SAVE_ADDR_BASE;
+    printf("/n往FLASH中写入的数据为：\n");
+    for (i = 0; i < BufferSize; i++)
+    {
+        if (FLASH_COMPLETE != FLASH_ProgramHalfWord(ucStartAddr, usFlashWriteBuf[i]))
+        {
+            printf("Write Error!\n");
+            return -1;
+        }
+        printf("ucFlashWriteBuf[%d] = 0x%.4x\n", i, usFlashWriteBuf[i]);
+        ucStartAddr += 2;
+    }
+
+    /* 上锁 */
+    FLASH_Lock();
+
+    /* 读取操作 */
+    ucStartAddr = PARAM_SAVE_ADDR_BASE;
+    printf("\n从FLASH中读出的数据为：\n");
+    for (i = 0; i < BufferSize; i++)
+    {
+        usFlashReadBuf[i] = *(__IO uint16_t*)ucStartAddr;
+        printf("ucFlashReadBuf[%d] = 0x%.4x\n", i, usFlashReadBuf[i]);
+        ucStartAddr += 2;
+    }
+
+    /* 读出的数据与写入的数据做比较 */
+    for (i = 0; i < BufferSize; i++)
+    {
+        if (usFlashReadBuf[i] != usFlashWriteBuf[i])
+        {
+            printf("\n对比失败！！！\n");
+            return -1;
+        }
+    }
+
+    return 0;
 }

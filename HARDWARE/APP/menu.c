@@ -4,7 +4,7 @@
 #include "usart.h"
 #include "key.h"
 #include "delay.h"
- 
+
 #define Null 0
 struct Dev_Info *mdev;
 
@@ -113,7 +113,7 @@ struct MenuItem m2_temp[3]=
 
 struct MenuItem m2_hum[2]=
 {
-    {2, "Hum Max:    %",    MaxHumSet,      Null,   m1_sys},
+    {2, "Hum Max",          MaxHumSet,      Null,   m1_sys},
     {2, "Exit",             TurnBack,       Null,   m1_sys},
 };
 
@@ -134,7 +134,7 @@ struct MenuItem m3_temp_mod[3]=
 
 struct MenuItem m3_temp_th[2]=
 {
-    {2, "Max Temp:    C",    MaxTempSet,     Null,   m2_temp},
+    {2, "Max Temp",          MaxTempSet,     Null,   m2_temp},
     {2, "Exit",              TurnBack,       Null,   m2_temp},
 };
 
@@ -186,24 +186,26 @@ void MaxTempSet(void)
     delay_ms(100);
     key_val = KEY_Scan();
     KEY_update(KEY_RELEASE);
+    LCD_ShowString(2, 14, "Set Max Temp:");
     while(key_val != KEY_ENTER)
     {
         key_val = KEY_Scan();
         KEY_update(KEY_RELEASE);
         delay_ms(100);
-        if(mdev->temp_th > 99)
-            mdev->temp_th = 100;
-        else if(mdev->temp_th < 1)
-            mdev->temp_th = 0;
+        if(mdev->set.temp_th >= TEMP_MAX)
+            mdev->set.temp_th = 100;
+        else if(mdev->set.temp_th < 1)
+            mdev->set.temp_th = 0;
 
         if(key_val == KEY_RIGHT)
-            mdev->temp_th++;
+            mdev->set.temp_th++;
         else if(key_val == KEY_LEFT)
-            mdev->temp_th--;
+            mdev->set.temp_th--;
 
-        LCD_ShowNum(90,14,mdev->temp_th,2,12);
-        printf("Set temp %d\n", mdev->temp_th);
+        LCD_ShowNum(110,14, mdev->set.temp_th, 3, 12);
+        printf("Set temp %d\n", mdev->set.temp_th);
     }
+    FLASH_SaveData(&mdev->set);
 }
 
 void MaxHumSet(void)
@@ -212,24 +214,26 @@ void MaxHumSet(void)
     delay_ms(100);
     key_val = KEY_Scan();
     KEY_update(KEY_RELEASE);
+    LCD_ShowString(2, 14, "Set Hum Temp:");
     while(key_val != KEY_ENTER)
     {
         key_val = KEY_Scan();
         KEY_update(KEY_RELEASE);
         delay_ms(100);
-        if(mdev->hum_th > 99)
-            mdev->hum_th = 100;
-        else if(mdev->hum_th < 1)
-            mdev->hum_th = 0;
+        if(mdev->set.hum_th >= 100)
+            mdev->set.hum_th = 100;
+        else if(mdev->set.hum_th < HUM_MIN)
+            mdev->set.hum_th = HUM_MIN;
 
         if(key_val == KEY_RIGHT)
-            mdev->hum_th++;
+            mdev->set.hum_th++;
         else if(key_val == KEY_LEFT)
-            mdev->hum_th--;
+            mdev->set.hum_th--;
 
-        LCD_ShowNum(90,14,mdev->hum_th,2,12);
-        printf("Set temp %d\n", mdev->hum_th);
+        LCD_ShowNum(110, 14, mdev->set.hum_th, 2, 12);
+        printf("Set temp %d\n", mdev->set.hum_th);
     }
+    FLASH_SaveData(&mdev->set);
 }
 
 
@@ -273,7 +277,7 @@ void DoSomething(void)
 
 void DoShowTempVal(void)
 {
-    LCD_ShowNum(90,14,mdev->temp_th,2,12);
+    LCD_ShowNum(90,14,mdev->set.temp_th,2,12);
 }
 
 void ShowRevInfo(void)

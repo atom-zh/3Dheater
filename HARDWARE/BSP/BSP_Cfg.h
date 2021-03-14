@@ -1,6 +1,10 @@
 #ifndef __BSP_CFG_H
 #define __BSP_CFG_H	 
 #include "sys.h"
+#include "usart.h"
+
+#define HUM_MIN         10
+#define TEMP_MAX        100
 
 typedef enum
 {
@@ -30,21 +34,31 @@ enum DisplayStatus
     MENU_EXIT
 }__attribute__((__packed__));
 
-struct Dev_Info
+struct DevParamSave
 {
-    int temp;
-    int temp_th;
-    int hum;
-    int hum_th;
-    
+    vu32 magic;
     char temp_mod;
     char hum_mod;
 
-    int weight1_pi;
-    int weight2_pi;
+    int temp_th;
+    int hum_th;
+
+    int w1_offset;
+    int w2_offset;
+}__attribute__((__packed__));
+
+struct Dev_Info
+{
+    char temp_mod;
+    char hum_mod;
+
+    int temp;
+    int hum;
+
     float weight1;
     float weight2;
-    
+
+    struct DevParamSave set;
     enum KEY key_val;
     enum DisplayStatus status;
 }__attribute__((__packed__));
@@ -74,4 +88,10 @@ u8 IIC_Read_One_Byte(u8 daddr,u8 addr);
 
 void SPI2_Init(void);           //硬件SPI2口初始化
 unsigned char SPI2_ReadWriteByte(unsigned char TxData);
+
+int FlashReadWriteTest(void);
+void Flash_Init(struct DevParamSave *p_Initbuf);
+void FLASH_ReadData(void *p_Readbuf);
+void FLASH_SaveData(void *p_Writebuf);
+
 #endif
